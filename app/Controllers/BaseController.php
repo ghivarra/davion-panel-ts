@@ -2,12 +2,14 @@
 
 namespace App\Controllers;
 
+use App\Libraries\Ghivarra\DavionShield;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Libraries\Ghivarra\VueIgniter;
 
 /**
  * Class BaseController
@@ -27,13 +29,14 @@ abstract class BaseController extends Controller
      * @var CLIRequest|IncomingRequest
      */
     protected $request;
+    protected $vue;
 
     /**
      * An array of helpers to be loaded automatically upon
      * class instantiation. These helpers will be available
      * to all other controllers that extend BaseController.
      *
-     * @var list<string>
+     * @var array
      */
     protected $helpers = [];
 
@@ -48,11 +51,29 @@ abstract class BaseController extends Controller
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
+        // register vue
+        $this->vue = new VueIgniter();
+
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
+    }
+
+    // create role check functions on base controller
+    public function checkPermission(string $moduleAlias)
+    {
+        $davionShield = new DavionShield();
+        $accountData  = $davionShield->getAccountData();
+        $checkAccess  = $davionShield->hasAccess($moduleAlias, $accountData['admin_role_id'], $accountData['is_superadmin']);
+        
+        if (!$checkAccess)
+        {
+            return false;
+        }
+
+        return $checkAccess;
     }
 }
