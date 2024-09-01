@@ -13,6 +13,9 @@ use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 
+defined('PANEL_PAGE') || define('PANEL_PAGE', $_ENV['PANEL_PAGE']);
+defined('LOGIN_PAGE') || define('LOGIN_PAGE', $_ENV['LOGIN_PAGE']);
+
 class Filters extends BaseFilters
 {
     /**
@@ -34,6 +37,9 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'loggedIn'      => LoggedIn::class,
+        'loggedOut'     => LoggedOut::class,
+        'sessionGC'     => SessionGarbageCollector::class
     ];
 
     /**
@@ -57,7 +63,7 @@ class Filters extends BaseFilters
         'after' => [
             'pagecache',   // Web Page Caching
             'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
+            // 'toolbar',     // Debug Toolbar
         ],
     ];
 
@@ -103,5 +109,15 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'loggedOut' => [
+            'before' => [ PANEL_PAGE . '/', PANEL_PAGE . '/*' ]
+        ],
+        'loggedIn' => [
+            'before' => [ LOGIN_PAGE . '/' ]
+        ],
+        'csrf' => [
+            'before' => [ LOGIN_PAGE . '/', LOGIN_PAGE . '/*' ]
+        ]
+    ];
 }
