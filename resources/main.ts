@@ -1,11 +1,25 @@
-import './assets/main.css'
+// import base css
+import './assets/main.scss'
 
-import { createApp } from 'vue'
-import App from './App.vue'
+// import type
+import type { EnvInterface } from './interfaces/EnvInterface'
+
+// import modules
+import { createApp, h } from 'vue'
 import router from './router'
+import { VueIgniter } from './libraries/Ghivarra/VueIgniter'
 
-const app = createApp(App)
+const env: EnvInterface = import.meta.env
 
-app.use(router)
+VueIgniter({
+    rootId: (typeof env.VITE_APP_ID === 'undefined') ? 'app' : env.VITE_APP_ID,
+    setup: (App, props, root) => {
+        const app = createApp({
+            render: () => h(App, props)
+        })
 
-app.mount('#app')
+        // app.config.unwrapInjectedRef = true
+        app.use(router)
+        app.mount(root)
+    }
+})
