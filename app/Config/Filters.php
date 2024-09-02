@@ -12,6 +12,9 @@ use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
+use App\Filters\LoggedIn;
+use App\Filters\LoggedOut;
+use App\Filters\SessionGarbageCollector;
 
 defined('PANEL_PAGE') || define('PANEL_PAGE', $_ENV['PANEL_PAGE']);
 defined('LOGIN_PAGE') || define('LOGIN_PAGE', $_ENV['LOGIN_PAGE']);
