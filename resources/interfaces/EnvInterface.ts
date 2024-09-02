@@ -1,4 +1,4 @@
-interface EnvInterface {
+export interface EnvInterface {
     BASE_URL?: string,
     DEV?: boolean,
     MODE?: string,
@@ -19,5 +19,3 @@ interface EnvInterface {
     VITE_USE_LOADER?: string
     VITE_LOADER_ON_CHANGE_PAGE?: string
 }
-
-export type { EnvInterface }
