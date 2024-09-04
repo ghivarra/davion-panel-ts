@@ -6,5 +6,5 @@ export interface WebsiteInfoInterface {
     icon: string,
     icon_version: string,
     logo: string,
-    logo_version: string
+    logo_version: string,
 }

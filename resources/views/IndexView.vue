@@ -32,7 +32,7 @@ const webInfo = ref(props.website)
 const pageTitle = ref(props.title)
 
 // methods
-const updateMetaData = function(): void {
+const updateMetaData = (): void => {
     document.querySelector('title')!.innerHTML = `${pageTitle.value} | ${webInfo.value.name} - ${webInfo.value.tagline}`
     document.querySelector('meta[name=description]')!.setAttribute('content', webInfo.value.description)
     document.querySelector('link[data-id=favicon]')!.setAttribute('href', baseUrl('favicon.ico?v=' + webInfo.value.icon_version))
@@ -41,19 +41,25 @@ const updateMetaData = function(): void {
     document.querySelector('link[data-id=icon16]')!.setAttribute('href', imageUrl(`icon/${webInfo.value.icon}`, 16))
 }
 
+const updateConfig = (newConfig: WebsiteInfoInterface): void => {
+    webInfo.value = newConfig
+    updateMetaData()
+}
+
+const showLoader = (): void => {
+    loaderState.value = true
+}
+
+const hideLoader = (): void => {
+    loaderState.value = false
+}
+
 // provide
 provide('config', computed(() => webInfo.value))
 provide('completeTitle', computed(() => `${pageTitle.value} | ${webInfo.value.name} - ${webInfo.value.tagline}`))
-provide('updateConfig', (newConfig: WebsiteInfoInterface): void => {
-    webInfo.value = newConfig
-    updateMetaData()
-})
-provide('showLoader', (): void => {
-    loaderState.value = true
-})
-provide('hideLoader', (): void => {
-    loaderState.value = false
-})
+provide('updateConfig', updateConfig)
+provide('showLoader', showLoader)
+provide('hideLoader', hideLoader)
 
 // on mounted
 onMounted(() => {
@@ -61,6 +67,7 @@ onMounted(() => {
     nextTick(() => {
         firstLoad.value = false
         loaderState.value = false
+        updateMetaData()
     })
 
     // watch font awesome icons
