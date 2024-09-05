@@ -14,7 +14,7 @@
                 <span v-if="group.name !== 'Default'"
                     class="d-block pt-2 ps-3 mb-2 panel-sidebar-label text-uppercase">{{ group.name }}</span>
                 <div v-for="(menu, menuIndex) in group.menu" v-bind:key="menuIndex"
-                    v-bind:class="{ active: menu.is_active, parent: (typeof menu.childs !== 'undefined') }"
+                    v-bind:class="{ active: menu.is_active, parent: (menu.type === 'Parent') }"
                     class="panel-sidebar-link mb-1">
 
                     <!-- Primary Menu -->
