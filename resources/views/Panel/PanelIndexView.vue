@@ -52,17 +52,17 @@
 // import { Modal, Button, Dropdown, Offcanvas } from 'bootstrap'
 
 // import components
-import PreloadComponent from '../../components/PreloadComponent.vue'
-import PanelHeaderComponent from '../../components/PanelHeaderComponent.vue'
-import PanelSidebarComponent from '../../components/PanelSidebarComponent.vue'
+import PreloadComponent from '@/components/PreloadComponent.vue'
+import PanelHeaderComponent from '@/components/PanelHeaderComponent.vue'
+import PanelSidebarComponent from '@/components/PanelSidebarComponent.vue'
 
 // import library
 import { dom } from '@fortawesome/fontawesome-svg-core'
-import { computed, ref, nextTick, provide, onMounted } from 'vue'
+import { computed, ref, nextTick, provide, onMounted, watch } from 'vue'
 import { panelUrl, checkAxiosError, generateBreadcrumb, baseUrl, imageUrl } from '@/libraries/Helpers'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList } from '@fortawesome/free-solid-svg-icons'
 
@@ -78,13 +78,12 @@ import type { BackendResponseInterface } from '@/interfaces/BackendResponseInter
 // env
 const env: EnvInterface = import.meta.env
 const router = useRouter()
+const route = useRoute()
 
 // props
 const props = defineProps<{
     website: WebsiteInfoInterface,
     title: string,
-    csrfToken: string,
-    csrfHash: string,
 }>()
 
 // data
@@ -220,6 +219,19 @@ provide('hideLoader', hideLoader)
 provide('updateAdminData', updateAdminData)
 provide('loggingOut', loggingOut)
 
+// watch
+watch(() => route.name, () => {
+    pageTitle.value = (typeof route.meta.pageName === 'undefined') ? '' : route.meta.pageName
+    updateMetaData()
+    activateMenu()
+    breadcrumbs.value = generateBreadcrumb(router)
+    showSidebar.value = false
+
+    if (import.meta.env.VITE_LOADER_ON_CHANGE_PAGE === 'true') {
+        loaderState.value = true
+    }
+})
+
 // font awesome
 library.add(faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList)
 
@@ -255,3 +267,90 @@ onMounted(() => {
 })
 
 </script>
+
+<style lang="scss">
+
+@import "../../assets/base.scss";
+
+$largeBreakpoint: "991.98px";
+
+.panel {
+    &-body {
+        background-color: darken(#ffffff, 5%);
+        width: calc(100vw - 260px);
+        width: calc(100dvw - 260px);
+        display: block;
+
+        @media (max-width: $largeBreakpoint) {
+            width: 100vw;
+            width: 100dvw;
+            background-color: #ffffff;
+        }
+    }
+
+    &-main {
+        &-header {
+            display: flex;
+
+            @media (max-width: $largeBreakpoint) {
+                display: block;
+            }
+
+            &-title {
+                margin-bottom: 0;
+                font-size: 1.6rem;
+
+                @media (max-width: $largeBreakpoint) {
+                    margin-bottom: .4rem;
+                }
+            }
+        }
+    }
+
+    &-box {
+        border-radius: 6px;
+        border: 1px solid lighten(#000000, 85%);
+        box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, .15);
+        overflow: hidden;
+
+        &-header {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--bs-light);
+            background-color: lighten($primary, 15);
+            padding: .75rem 1rem;
+        }
+    }
+}
+
+table {
+    .col {
+        &-no {
+            width: 100px;
+        }
+        
+    }
+}
+
+#sidebarBackdrop {
+    background-color: #000000;
+    min-width: 100%;
+    min-height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    opacity: .2;
+}
+
+table .table-dropdown::after {
+    display: none;
+}
+
+.ghivarra-vue-table-wrapper {
+    .col-no {
+        text-align: center;
+    }
+}
+
+</style>
