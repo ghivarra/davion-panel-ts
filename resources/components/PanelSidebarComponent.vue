@@ -60,7 +60,7 @@ import { defineProps, ref, inject, watch, computed } from "vue"
 import { imageUrl } from "@/libraries/Helpers"
 
 // import types
-import type { Ref } from "vue"
+import type { Ref, ComputedRef } from "vue"
 import type { WebsiteInfoInterface } from "@/interfaces/WebsiteInfoInterface"
 import type { GroupMenuInterface, MenuInterface, ChildMenuInterface } from "@/interfaces/DataMenuInterface"
 
@@ -73,14 +73,14 @@ const props = defineProps<{
 }>()
 
 // inject
-const config = inject<WebsiteInfoInterface>('config')
+const config = inject<ComputedRef<WebsiteInfoInterface>>('config')
 
 // data
 const activePrimary: Ref<(number|string)[]> = ref([])
 const activeParent: Ref<(number|string)[]> = ref([])
 
 // computed
-const logo = computed(() => imageUrl(`logo/${config?.logo}`, 180))
+const logo = computed(() => imageUrl(`logo/${config?.value.logo}`, 180))
 
 // watch
 watch(() => props.activeMenu, (newValue) => {
