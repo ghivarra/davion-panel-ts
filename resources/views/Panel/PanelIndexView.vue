@@ -6,7 +6,7 @@
 
         <!-- SIDEBAR -->
         <aside>
-            <PanelSidebarComponent v-bind:activeMenu="activeMenuId" v-bind:activeParentMenu="activeParentMenuId"
+            <PanelSidebarComponent ref="PanelSidebarRef" v-bind:activeMenu="activeMenuId" v-bind:activeParentMenu="activeParentMenuId"
             v-bind:menu="menu" v-bind:showSidebar="showSidebar" v-on:sidebarToggleClick="toggleSidebar" />
         </aside>
 
@@ -65,15 +65,19 @@ import Swal from 'sweetalert2'
 import { useRouter, useRoute } from 'vue-router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList } from '@fortawesome/free-solid-svg-icons'
+import { faCircle } from "@fortawesome/free-regular-svg-icons"
 
 // import types / interfaces
 import type { Ref } from 'vue'
 import type { BreadcrumbInterface } from '@/libraries/Helpers'
 import type { WebsiteInfoInterface } from '@/interfaces/WebsiteInfoInterface'
 import type { EnvInterface } from '@/interfaces/EnvInterface'
-import type { DataMenuInterface } from '@/interfaces/DataMenuInterface'
+import type { GroupMenuInterface, MenuInterface, ChildMenuInterface } from '@/interfaces/DataMenuInterface'
 import type { DataAdminInterface } from '@/interfaces/DataAdminInterface'
 import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
+
+// font awesome
+library.add(faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList, faCircle)
 
 // env
 const env: EnvInterface = import.meta.env
@@ -102,14 +106,14 @@ const admin: Ref<DataAdminInterface> = ref({
     is_superadmin: 0,
     photo: null
 })
-const menu: Ref<DataMenuInterface[]> = ref([])
+const menu: Ref<GroupMenuInterface[]> = ref([])
 const useLoader = ref(env.VITE_USE_LOADER)
 const firstLoad = ref(true)
 const loaderState = ref(true)
 const showSidebar = ref(false)
 const activeMenuId: Ref<number|null> = ref(null)
 const activeParentMenuId: Ref<number|null> = ref(null)
-const menuExist = ref(false)
+const PanelSidebarRef: Ref<InstanceType<typeof PanelSidebarComponent> | null> = ref(null)
 
 // methods
 const updateMetaData = (): void => {
@@ -126,30 +130,24 @@ const toggleSidebar = (): void => {
 }
 
 const activateMenu = (): void => {
-    const currentRouteName = router.currentRoute.value.name
-
-    menu.value.forEach((group) => {
-        group.menu.forEach((item) => {
-            if (typeof item.router_name !== 'undefined' && item.router_name === currentRouteName) {
-                menuExist.value = true
-                activeMenuId.value = (typeof item.id === 'string') ? parseInt(item.id) : item.id
-            }
-            if (typeof item.childs !== 'undefined') {
-                item.childs.forEach((child) => {
-                    if (typeof child.router_name !== 'undefined' && child.router_name === currentRouteName) {
-                        menuExist.value = true
-                        activeParentMenuId.value = (typeof item.id === 'string') ? parseInt(item.id) : item.id
-                        activeMenuId.value = (typeof child.id === 'string') ? parseInt(child.id) : child.id
-                    }
-                })
-            }
-        })
+    menu.value.forEach((group: GroupMenuInterface) => {
+        if (group.menu.length > 0) {
+            group.menu.forEach((groupMenu: MenuInterface) => {
+                groupMenu.is_active = (groupMenu.router_name === route.name)
+                if (typeof groupMenu.childs !== 'undefined') {
+                    groupMenu.childs.forEach((childMenu: ChildMenuInterface) => {
+                        if (childMenu.router_name === route.name) {
+                            childMenu.is_active = true
+                            groupMenu.is_active = true
+                        } else {
+                            childMenu.is_active = false
+                            groupMenu.is_active = false
+                        }
+                    })
+                }
+            })
+        }
     })
-
-    if (!menuExist.value) {
-        activeMenuId.value = null
-        activeParentMenuId.value = null
-    }
 }
 
 const stopLoader = (): void => {
@@ -223,7 +221,6 @@ provide('loggingOut', loggingOut)
 watch(() => route.name, () => {
     pageTitle.value = (typeof route.meta.pageName === 'undefined') ? '' : route.meta.pageName
     updateMetaData()
-    activateMenu()
     breadcrumbs.value = generateBreadcrumb(router)
     showSidebar.value = false
 
@@ -231,9 +228,6 @@ watch(() => route.name, () => {
         loaderState.value = true
     }
 })
-
-// font awesome
-library.add(faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList)
 
 // get admin data
 updateAdminData()
@@ -248,6 +242,7 @@ axios.get(panelUrl('public/menu'))
                 })
             } else {
                 menu.value = res.data
+                activateMenu()
             }
         }).catch(function(res) {
             checkAxiosError(res.request.status)
