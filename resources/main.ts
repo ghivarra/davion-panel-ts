@@ -33,7 +33,6 @@ router().then((routeList) => {
                 render: () => h(App, props)
             })
     
-            // app.config.unwrapInjectedRef = true
             app.use(vueRouter)
             app.component('font-awesome', FontAwesomeIcon)
             app.mount(root)
