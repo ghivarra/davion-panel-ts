@@ -97,13 +97,10 @@ watch(() => props.activeParentMenu, (newValue) => {
 })
 
 const mainMenuClick = (menu: MenuInterface): void => {
-    
     props.menu.forEach((group: GroupMenuInterface) => {
         if (group.menu.length > 0) {
             group.menu.forEach((groupMenu: MenuInterface) => {
-                if (groupMenu.id !== menu.id) {
-                    groupMenu.is_active = false
-                }
+                groupMenu.is_active = (groupMenu.id === menu.id)
                 if (typeof groupMenu.childs !== 'undefined') {
                     groupMenu.childs.forEach((childMenu: ChildMenuInterface) => {
                         childMenu.is_active = false
@@ -112,27 +109,21 @@ const mainMenuClick = (menu: MenuInterface): void => {
             })
         }
     })
-
-    menu.is_active = true
 }
 
 const childMenuClick = (childMenu: ChildMenuInterface): void => {
     props.menu.forEach((group: GroupMenuInterface) => {
         if (group.menu.length > 0) {
             group.menu.forEach((groupMenu: MenuInterface) => {
-                if (groupMenu.id !== childMenu.parent_id) {
-                    groupMenu.is_active = false
-                }
+                groupMenu.is_active = (groupMenu.id === childMenu.parent_id)
                 if (typeof groupMenu.childs !== 'undefined') {
                     groupMenu.childs.forEach((child: ChildMenuInterface) => {
-                        child.is_active = false
+                        child.is_active = (child.id === childMenu.id)
                     })
                 }
             })
         }
     })
-
-    childMenu.is_active = true
 }
 
 </script>
