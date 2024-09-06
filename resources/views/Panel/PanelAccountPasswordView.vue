@@ -52,7 +52,6 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 
 // import type
-import type { Ref } from 'vue'
 import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
 
 // env
@@ -64,28 +63,14 @@ const emit = defineEmits(['loaded'])
 // inject
 const showLoader = inject<() => void>('showLoader')
 const hideLoader = inject<() => void>('showLoader')
-
-// interface
-interface ShowDataInterface {
-    oldPassword: boolean,
-    newPassword: boolean,
-    confPassword: boolean
-}
-
-interface DataInterface {
-    oldPassword: string,
-    newPassword: string,
-    confPassword: string
-}
-
 // data
-const show: Ref<ShowDataInterface> = ref({
+const show = ref({
     oldPassword: false,
     newPassword: false,
     confPassword: false
 })
 
-const data: Ref<DataInterface> = ref({
+const data = ref({
     oldPassword: '',
     newPassword: '',
     confPassword: ''
