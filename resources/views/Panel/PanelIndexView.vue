@@ -48,9 +48,6 @@
 
 <script setup lang="ts">
 
-// import bootstrap
-// import { Modal, Button, Dropdown, Offcanvas } from 'bootstrap'
-
 // import components
 import PreloadComponent from '@/components/PreloadComponent.vue'
 import PanelHeaderComponent from '@/components/PanelHeaderComponent.vue'
