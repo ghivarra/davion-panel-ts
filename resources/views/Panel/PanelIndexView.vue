@@ -61,7 +61,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useRouter, useRoute } from 'vue-router'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 import { faCircle } from "@fortawesome/free-regular-svg-icons"
 
 // import types / interfaces
@@ -74,7 +74,7 @@ import type { DataAdminInterface } from '@/interfaces/DataAdminInterface'
 import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
 
 // font awesome
-library.add(faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList, faCircle)
+library.add(faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList, faCircle, faFloppyDisk)
 
 // env
 const env: EnvInterface = import.meta.env
