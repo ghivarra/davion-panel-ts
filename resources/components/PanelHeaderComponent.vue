@@ -110,7 +110,7 @@ import Swal from 'sweetalert2'
 import axios from 'axios'
 
 // import types
-import type { Ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 import type { DataAdminInterface } from '@/interfaces/DataAdminInterface';
 import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
 
@@ -125,7 +125,7 @@ interface PublicMenuSearchInterface {
 }
 
 // inject
-const admin = inject<DataAdminInterface>('admin')
+const admin = inject<ComputedRef<DataAdminInterface>>('admin')
 const showLoader = inject<() => void>('showLoader')
 const hideLoader = inject<() => void>('hideLoader')
 
@@ -143,7 +143,7 @@ const headerMenu = ref<HTMLElement | null>(null)
 
 // computed
 const profilePicture = computed(() => {
-    return (typeof admin?.photo === 'undefined' || admin.photo === null || admin.photo.length < 1) ? imageUrl('admin/default-user.png', 64) : imageUrl(`admin/${admin.photo}`, 64)
+    return (typeof admin?.value.photo === 'undefined' || admin?.value.photo === null || admin?.value.photo.length < 1) ? imageUrl('admin/default-user.png', 64) : imageUrl(`admin/${admin.value.photo}`, 64)
 })
 
 // methods
