@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 
-import { ref, onMounted, defineEmits } from 'vue'
+import { ref, onMounted, defineEmits, nextTick } from 'vue'
 
 // define events
 const emit = defineEmits(['loaded'])
@@ -17,7 +17,9 @@ const name = ref('Dashboard')
 
 // on mounted
 onMounted(() => {
-    emit('loaded')
+    nextTick(() => {
+        emit('loaded')
+    })
 })
 
 
