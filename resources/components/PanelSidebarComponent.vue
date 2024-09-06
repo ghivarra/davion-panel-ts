@@ -56,12 +56,12 @@
 <script setup lang="ts">
 
 // import libs
-import { defineProps, ref, inject, watch, computed } from "vue"
+import { defineProps, inject, computed } from "vue"
 // import { useRoute } from "vue-router"
 import { imageUrl } from "@/libraries/Helpers"
 
 // import types
-import type { Ref, ComputedRef } from "vue"
+import type { ComputedRef } from "vue"
 import type { WebsiteInfoInterface } from "@/interfaces/WebsiteInfoInterface"
 import type { GroupMenuInterface, MenuInterface } from "@/interfaces/DataMenuInterface"
 
@@ -79,26 +79,8 @@ const props = defineProps<{
 // inject
 const config = inject<ComputedRef<WebsiteInfoInterface>>('config')
 
-// data
-const activePrimary: Ref<(number|string)[]> = ref([])
-const activeParent: Ref<(number|string)[]> = ref([])
-
 // computed
 const logo = computed(() => imageUrl(`logo/${config?.value.logo}`, 180))
-
-// watch
-watch(() => props.activeMenu, (newValue) => {
-    activePrimary.value = []
-    if (newValue !== null) {
-        activePrimary.value.push(newValue)
-    }
-})
-
-watch(() => props.activeParentMenu, (newValue) => {
-    if (newValue !== null) {
-        activeParent.value.push(newValue)
-    }
-})
 
 const mainMenuClick = (menu: MenuInterface): void => {
     props.menu.forEach((group: GroupMenuInterface) => {
