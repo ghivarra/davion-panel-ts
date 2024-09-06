@@ -130,7 +130,9 @@ const activateMenu = (): void => {
     menu.value.forEach((group: GroupMenuInterface) => {
         if (group.menu.length > 0) {
             group.menu.forEach((groupMenu: MenuInterface) => {
-                groupMenu.is_active = (groupMenu.router_name === route.name)
+                if (groupMenu.type !== 'Parent') {
+                    groupMenu.is_active = (groupMenu.router_name === route.name)
+                }
                 if (typeof groupMenu.childs !== 'undefined') {
                     groupMenu.childs.forEach((childMenu: ChildMenuInterface) => {
                         if (childMenu.router_name === route.name) {
@@ -138,7 +140,7 @@ const activateMenu = (): void => {
                             groupMenu.is_active = true
                         } else {
                             childMenu.is_active = false
-                            groupMenu.is_active = false
+                            // groupMenu.is_active = false
                         }
                     })
                 }
@@ -218,6 +220,7 @@ provide('loggingOut', loggingOut)
 watch(() => route.name, () => {
     pageTitle.value = (typeof route.meta.pageName === 'undefined') ? '' : route.meta.pageName
     updateMetaData()
+    activateMenu()
     breadcrumbs.value = generateBreadcrumb(router)
     showSidebar.value = false
 

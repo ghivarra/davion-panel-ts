@@ -38,7 +38,7 @@
                     <!-- Childs Menu Wrapper -->
                     <div v-if="(typeof menu.childs !== 'undefined')"
                         class="panel-sidebar-link-child-wrapper text-white pt-2">
-                        <router-link v-for="(childMenu, childMenuIndex) in menu.childs" v-bind:key="childMenuIndex" v-on:click="childMenuClick(childMenu)"
+                        <router-link v-for="(childMenu, childMenuIndex) in menu.childs" v-bind:key="childMenuIndex" 
                             v-bind:to="{ name: childMenu.router_name }"
                             v-bind:class="{ active: childMenu.is_active }"
                             class="d-flex mb-2 align-items-center panel-sidebar-link-button child btn btn-link w-100 text-decoration-none">
@@ -56,13 +56,17 @@
 <script setup lang="ts">
 
 // import libs
-import { defineProps, ref, inject, watch, computed } from "vue"
+import { defineProps, ref, inject, watch, computed, nextTick } from "vue"
+import { useRoute } from "vue-router"
 import { imageUrl } from "@/libraries/Helpers"
 
 // import types
 import type { Ref, ComputedRef } from "vue"
 import type { WebsiteInfoInterface } from "@/interfaces/WebsiteInfoInterface"
 import type { GroupMenuInterface, MenuInterface, ChildMenuInterface } from "@/interfaces/DataMenuInterface"
+
+// env
+const route = useRoute()
 
 // props
 const props = defineProps<{
@@ -100,31 +104,48 @@ const mainMenuClick = (menu: MenuInterface): void => {
     props.menu.forEach((group: GroupMenuInterface) => {
         if (group.menu.length > 0) {
             group.menu.forEach((groupMenu: MenuInterface) => {
-                groupMenu.is_active = (groupMenu.id === menu.id)
-                if (typeof groupMenu.childs !== 'undefined') {
-                    groupMenu.childs.forEach((childMenu: ChildMenuInterface) => {
-                        childMenu.is_active = false
-                    })
+                if (groupMenu.type === 'Parent' && groupMenu.id === menu.id) {
+                    groupMenu.is_active = (groupMenu.is_active) ? false : true
                 }
+//                if (groupMenu.type === 'Primary') {
+//                    if (groupMenu.is_active) {
+//                        nextTick(() =>  {
+//                            groupMenu.is_active =  (groupMenu.router_name === route.name)
+//                        })
+//                    } else {
+//                        groupMenu.is_active = (groupMenu.id === menu.id)
+//                        if (typeof groupMenu.childs !== 'undefined') {
+//                            groupMenu.childs.forEach((childMenu: ChildMenuInterface) => {
+//                                childMenu.is_active = false
+//                            })
+//                        }
+//                    }
+//                } else {
+//                    if (groupMenu.is_active) {
+//                        groupMenu.is_active = false
+//                    } else {
+//                        groupMenu.is_active = (groupMenu.id === menu.id)
+//                    }
+//              }
             })
         }
     })
 }
 
-const childMenuClick = (childMenu: ChildMenuInterface): void => {
-    props.menu.forEach((group: GroupMenuInterface) => {
-        if (group.menu.length > 0) {
-            group.menu.forEach((groupMenu: MenuInterface) => {
-                groupMenu.is_active = (groupMenu.id === childMenu.parent_id)
-                if (typeof groupMenu.childs !== 'undefined') {
-                    groupMenu.childs.forEach((child: ChildMenuInterface) => {
-                        child.is_active = (child.id === childMenu.id)
-                    })
-                }
-            })
-        }
-    })
-}
+//const childMenuClick = (childMenu: ChildMenuInterface): void => {
+//    props.menu.forEach((group: GroupMenuInterface) => {
+//        if (group.menu.length > 0) {
+//            group.menu.forEach((groupMenu: MenuInterface) => {
+//                groupMenu.is_active = (groupMenu.id === childMenu.parent_id)
+//                if (typeof groupMenu.childs !== 'undefined') {
+//                    groupMenu.childs.forEach((child: ChildMenuInterface) => {
+//                        child.is_active = (child.id === childMenu.id)
+//                    })
+//                }
+//            })
+//        }
+//    })
+//}
 
 </script>
 
