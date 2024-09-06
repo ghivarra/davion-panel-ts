@@ -19,7 +19,7 @@
         <AdminDetailModal ref="adminDetailModal" v-bind:admin="adminDetail" />
 
         <!-- TABLE -->
-        <section ref="adminTableSection">
+        <section ref="adminTableSection" v-on:click.prevent="activeActionButton($event as MouseEvent)">
             <VueTable id="admin-table" ref="adminTable" v-bind:defaultLength="25" v-bind:lengthOptions="[10,25,50]"
                 v-bind:url="table.url" v-bind:order="table.order" v-bind:columns="table.columns"
                 v-bind:processData="processData" v-on:afterCreate="$emit('loaded')">
@@ -64,7 +64,7 @@
 // import libs
 import { inject, ref, onMounted } from 'vue'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
-// import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 
@@ -83,7 +83,7 @@ import type { ColumnInterface, VueTableInterface } from '@/libraries/Ghivarra/Vu
 import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
 
 // env
-// const router = useRouter()
+const router = useRouter()
 
 // inject
 const admin = inject<ComputedRef<DataAdminInterface>>('admin')
@@ -314,9 +314,48 @@ const deleteRow = (key: number):void => {
         })
 }
 
-// const checkSession = (key: number): void => {
-//     router.push({ path: `administrator/session/${tableData.value[key].id}` })
-// }
+const checkSession = (key: number): void => {
+    router.push({ path: `administrator/session/${tableData.value[key].id}` })
+}
+
+const activeActionButton = (event: MouseEvent): void => {
+    const target = event.target as HTMLElement
+
+    if (target.closest('.detail-button')) {
+        let key = target.getAttribute('data-key')
+        if (typeof key === 'string') {
+            adminDetailModalOpen(parseInt(key))
+        }
+    }
+
+    if (target.closest('.edit-button')) {
+        let key = target.getAttribute('data-key')
+        if (typeof key === 'string') {
+            adminUpdateModalOpen(parseInt(key))
+        }
+    }
+
+    if (target.closest('.status-button')) {
+        let key = target.getAttribute('data-key')
+        if (typeof key === 'string') {
+            updateStatusRow(parseInt(key))
+        }
+    }
+
+    if (target.closest('.delete-button')) {
+        let key = target.getAttribute('data-key')
+        if (typeof key === 'string') {
+            deleteRow(parseInt(key))
+        }
+    }
+
+    if (target.closest('.check-session-button')) {
+        let key = target.getAttribute('data-key')
+        if (typeof key === 'string') {
+            checkSession(parseInt(key))
+        }
+    }
+}
 
 // on mounted
 onMounted(() => {
@@ -335,54 +374,6 @@ onMounted(() => {
             }).catch(function(res) {
                 checkAxiosError(res.request.status)
             })
-
-    // see detail
-    adminTableSection.value?.addEventListener('click', (event: MouseEvent) => {
-        event.preventDefault()
-        const target = event.target as HTMLElement
-        if (target?.closest('.detail-button')) {
-            const key = target?.getAttribute('data-key')
-            if (typeof key === 'number') {
-                adminDetailModalOpen(key)
-            }
-        }
-    })
-
-    // edit button
-    adminTableSection.value?.addEventListener('click', (event: MouseEvent) => {
-        event.preventDefault()
-        const target = event.target as HTMLElement
-        if (target?.closest('.edit-button')) {
-            const key = target?.getAttribute('data-key')
-            if (typeof key === 'number') {
-                adminUpdateModalOpen(key)
-            }
-        }
-    })
-
-    // update status
-    adminTableSection.value?.addEventListener('click', (event: MouseEvent) => {
-        event.preventDefault()
-        const target = event.target as HTMLElement
-        if (target?.closest('.status-button')) {
-            const key = target?.getAttribute('data-key')
-            if (typeof key === 'number') {
-                updateStatusRow(key)
-            }
-        }
-    })
-
-    // delete
-    adminTableSection.value?.addEventListener('click', (event: MouseEvent) => {
-        event.preventDefault()
-        const target = event.target as HTMLElement
-        if (target?.closest('.delete-button')) {
-            const key = target?.getAttribute('data-key')
-            if (typeof key === 'number') {
-                deleteRow(key)
-            }
-        }
-    })
 })
 
 </script>
