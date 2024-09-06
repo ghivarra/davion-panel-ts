@@ -56,17 +56,17 @@
 <script setup lang="ts">
 
 // import libs
-import { defineProps, ref, inject, watch, computed, nextTick } from "vue"
-import { useRoute } from "vue-router"
+import { defineProps, ref, inject, watch, computed } from "vue"
+// import { useRoute } from "vue-router"
 import { imageUrl } from "@/libraries/Helpers"
 
 // import types
 import type { Ref, ComputedRef } from "vue"
 import type { WebsiteInfoInterface } from "@/interfaces/WebsiteInfoInterface"
-import type { GroupMenuInterface, MenuInterface, ChildMenuInterface } from "@/interfaces/DataMenuInterface"
+import type { GroupMenuInterface, MenuInterface } from "@/interfaces/DataMenuInterface"
 
 // env
-const route = useRoute()
+// const route = useRoute()
 
 // props
 const props = defineProps<{
