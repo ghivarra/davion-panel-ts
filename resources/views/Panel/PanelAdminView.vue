@@ -224,7 +224,7 @@ const updateRefreshTable = (id: string | number): void => {
     if (parsedId === adminId) {
         window.location.reload()
     } else {
-        adminTable.value.draw()
+        adminTable.value?.draw()
     }
 }
 
@@ -273,7 +273,7 @@ const updateStatusRow = (key: number): void => {
                 if (dataId === adminId) {
                     loggingOut!()
                 } else {
-                    adminTable.value.draw()
+                    adminTable.value?.draw()
                 }
             }
         }).catch(function(res) {
@@ -305,7 +305,7 @@ const deleteRow = (key: number):void => {
                 if (dataId === adminId) {
                     loggingOut!()
                 } else {
-                    adminTable.value.draw()
+                    adminTable.value?.draw()
                 }
             }
         }).catch(function(res) {
