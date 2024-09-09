@@ -214,7 +214,7 @@ const processData = (data: VueTableInterface): VueTableInterface => {
 }
 
 const refreshTable = (): void => {
-    
+    adminTable.value?.draw()
 }
 
 const updateRefreshTable = (id: string | number): void => {
