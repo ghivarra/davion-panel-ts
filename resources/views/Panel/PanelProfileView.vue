@@ -74,6 +74,7 @@ import Swal from 'sweetalert2'
 // import types
 import type { DataAdminInterface } from '@/interfaces/DataAdminInterface'
 import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
+import type { DataAdminSessionInterface } from '@/interfaces/DataAdminSessionInterface'
 
 // define emits
 const emit = defineEmits(['loaded'])
@@ -83,20 +84,6 @@ const showLoader = inject<() => void>('showLoader')
 const hideLoader = inject<() => void>('hideLoader')
 const updateAdminData = inject<() => void>('updateAdminData')
 const admin = inject<DataAdminInterface>('admin')
-
-// interfaces
-interface DataAdminSessionInterface {
-    id: string | number,
-    useragent: {
-        browser: string | null,
-        os: string | null,
-        mobile: boolean,
-        platform: string
-    },
-    ip_address: string,
-    last_update: string,
-    current: boolean
-}
 
 // data
 const mobileIcon = ref(imageUrl('tablet-smartphone.png', 60))
