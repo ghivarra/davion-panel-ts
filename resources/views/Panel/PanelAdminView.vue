@@ -146,14 +146,12 @@ const adminUpdateModal: Ref<InstanceType<typeof AdminUpdateModal> | null> = ref(
 const adminDetailModal: Ref<InstanceType<typeof AdminDetailModal> | null> = ref(null)
 
 const processData = (data: VueTableInterface): VueTableInterface => {
-    tableData.value = data.row as DatatableAdminInterface[]
-
-    // return if empty
     if (data.row.length < 1) {
+        tableData.value = []
         return data
     }
 
-    tableData.value.forEach((item, i) => {
+    data.row.forEach((item, i) => {
         const btnText = (item.status === 'Aktif') ? 'Nonaktifkan' : 'Aktifkan'
         const btnTextColor = (item.status === 'Aktif') ? 'text-warning' : 'text-success'
         tableData.value[i].action = `<div class="dropdown">
@@ -203,13 +201,16 @@ const processData = (data: VueTableInterface): VueTableInterface => {
         tableData.value[i].is_superadmin = (item.is_superadmin === 1) ? `<span class="bg-success text-white py-2 px-3 rounded-pill fw-bold">Ya</span>` : `<span class="bg-warning py-2 px-3 text-white rounded-pill fw-bold">Bukan</span>`
     })
 
+    // put into table data
+    tableData.value = [... data.row]
+
     // return
     return {
-        draw: (typeof data.draw !== 'number') ? parseInt(data.draw) : data.draw,
+        draw: (typeof data.draw === 'string') ? parseInt(data.draw) : data.draw,
         length: data.length,
         recordsTotal: data.recordsTotal,
         recordsFiltered: data.recordsFiltered,
-        row: [... tableData.value],
+        row: [... data.row],
     }
 }
 
@@ -322,35 +323,35 @@ const activeActionButton = (event: MouseEvent): void => {
     const target = event.target as HTMLElement
 
     if (target.closest('.detail-button')) {
-        let key = target.getAttribute('data-key')
+        const key = target.getAttribute('data-key')
         if (typeof key === 'string') {
             adminDetailModalOpen(parseInt(key))
         }
     }
 
     if (target.closest('.edit-button')) {
-        let key = target.getAttribute('data-key')
+        const key = target.getAttribute('data-key')
         if (typeof key === 'string') {
             adminUpdateModalOpen(parseInt(key))
         }
     }
 
     if (target.closest('.status-button')) {
-        let key = target.getAttribute('data-key')
+        const key = target.getAttribute('data-key')
         if (typeof key === 'string') {
             updateStatusRow(parseInt(key))
         }
     }
 
     if (target.closest('.delete-button')) {
-        let key = target.getAttribute('data-key')
+        const key = target.getAttribute('data-key')
         if (typeof key === 'string') {
             deleteRow(parseInt(key))
         }
     }
 
     if (target.closest('.check-session-button')) {
-        let key = target.getAttribute('data-key')
+        const key = target.getAttribute('data-key')
         if (typeof key === 'string') {
             checkSession(parseInt(key))
         }
