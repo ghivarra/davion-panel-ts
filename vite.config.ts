@@ -18,6 +18,9 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./resources', import.meta.url))
     }
   },
+  css: {
+    postcss: './postcss.config.js'
+  },
   build: {
     emptyOutDir: false,
     copyPublicDir: false,
@@ -32,5 +35,10 @@ export default defineConfig({
     origin: env.VITE_ORIGIN,
     port: parseInt(env.VITE_PORT),
     strictPort: true,
+    hmr: {
+      host: env.VITE_HOST,
+      port: parseInt(env.VITE_PORT),
+      protocol: 'wss'
+  }
   }
 })
