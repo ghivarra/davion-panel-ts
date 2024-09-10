@@ -79,7 +79,7 @@ import type { ComputedRef, Ref } from 'vue'
 import type { DataAdminInterface } from '@/interfaces/DataAdminInterface'
 import type { DataAdminRoleInterface } from '@/interfaces/DataAdminRoleInterface'
 import type { DatatableAdminInterface } from '@/interfaces/Datatable/DatatableAdminInterface'
-import type { ColumnInterface, VueTableInterface } from '@/libraries/Ghivarra/VueTable/VueTableInterfaces'
+import type { VueTableInterface } from '@/libraries/Ghivarra/VueTable/VueTableInterfaces'
 import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
 
 // env
@@ -98,7 +98,7 @@ const table = ref({
         column: 'name',
         dir: 'asc'
     },
-    columns: ref<ColumnInterface[]>([
+    columns: [
         { query: '', text: 'No.', key: 'no', sortable: false, searchable: false, class: ['col-no'] },
         { query: '', text: '', key: 'action', sortable: false, searchable: false, class: ['col-action'] },
         { query: '', text: 'Nama', key: 'name', class: ['col-primary'] },
@@ -106,7 +106,7 @@ const table = ref({
         { query: '', text: 'Email', key: 'email', class: ['col-secondary'] },
         { query: '', text: 'Role', key: 'admin_role_name', class: ['col-email-status'] },
         { query: '', text: 'Status', key: 'status', class: ['col-secondary'] },
-    ])
+    ]
 })
 
 const tableData: Ref<DatatableAdminInterface[]> = ref([])
