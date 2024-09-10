@@ -81,7 +81,7 @@
 <script setup lang="ts">
 
 // import libs
-import { inject, ref, computed, onMounted, defineEmits } from 'vue'
+import { inject, ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { panelUrl, checkAxiosError, imageUrl } from '@/libraries/Helpers'

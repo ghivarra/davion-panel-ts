@@ -46,7 +46,7 @@
 <script setup lang="ts">
 
 // import libs
-import { ref, computed, defineProps, defineExpose } from 'vue'
+import { ref, computed } from 'vue'
 import { imageUrl } from '@/libraries/Helpers'
 
 // import interface

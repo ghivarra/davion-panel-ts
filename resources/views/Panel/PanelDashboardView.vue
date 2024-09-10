@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 
-import { ref, onMounted, defineEmits, nextTick } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 
 // define events
 const emit = defineEmits(['loaded'])

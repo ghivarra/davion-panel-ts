@@ -131,7 +131,7 @@
 <script setup lang="ts">
 
 // import libs
-import { defineProps, defineEmits, ref, computed, watch, defineExpose } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 // interfaces
 import type { Ref } from 'vue'

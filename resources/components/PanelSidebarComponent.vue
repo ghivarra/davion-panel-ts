@@ -56,7 +56,7 @@
 <script setup lang="ts">
 
 // import libs
-import { defineProps, inject, computed } from "vue"
+import { inject, computed } from "vue"
 // import { useRoute } from "vue-router"
 import { imageUrl } from "@/libraries/Helpers"
 

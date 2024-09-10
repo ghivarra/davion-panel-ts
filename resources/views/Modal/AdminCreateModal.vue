@@ -96,7 +96,7 @@
 <script setup lang="ts">
 
 // import libs
-import { ref, inject, defineProps, defineExpose, defineEmits } from 'vue'
+import { ref, inject } from 'vue'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import axios from 'axios'
 import Swal from 'sweetalert2'

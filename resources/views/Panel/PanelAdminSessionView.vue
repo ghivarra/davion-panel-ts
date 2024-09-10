@@ -68,7 +68,7 @@
 <script setup lang="ts">
 
 // import libs
-import { ref, inject, defineEmits, computed, onMounted } from 'vue'
+import { ref, inject, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { panelUrl, checkAxiosError, imageUrl } from '@/libraries/Helpers'
 import axios from 'axios'

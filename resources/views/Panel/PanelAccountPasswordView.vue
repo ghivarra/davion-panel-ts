@@ -45,7 +45,7 @@
 <script setup lang="ts">
 
 // import libs
-import { ref, inject, onMounted, nextTick, defineEmits } from 'vue'
+import { ref, inject, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import Swal from 'sweetalert2'
