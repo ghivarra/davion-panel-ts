@@ -59,7 +59,7 @@
                 <!-- SLOT ROW -->
                 <template v-slot:row="{ rowData, columnData, key }">
                     <td v-bind:class="columnData[0].class">{{ rowData.no }}</td>
-                    <td>
+                    <td v-bind:class="columnData[1].class">
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle table-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-list me-1"></i>
