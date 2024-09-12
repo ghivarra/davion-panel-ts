@@ -154,7 +154,7 @@ const processData = (data: VueTableInterface): VueTableInterface => {
     data.row.forEach((item, i) => {
         const btnText = (item.status === 'Aktif') ? 'Nonaktifkan' : 'Aktifkan'
         const btnTextColor = (item.status === 'Aktif') ? 'text-warning' : 'text-success'
-        tableData.value[i].action = `<div class="dropdown">
+        data.row[i].action = `<div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle table-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fa-solid fa-list me-1"></i>
                                 </button>
@@ -194,11 +194,11 @@ const processData = (data: VueTableInterface): VueTableInterface => {
 
         const statusColor = (item.status === 'Aktif') ? 'success' : 'warning';
 
-        tableData.value[i].statusDefault = item.status
-        tableData.value[i].status = `<span class="bg-${statusColor} text-white py-2 px-3 rounded-pill fw-bold">${item.status}</span>`
+        data.row[i].statusDefault = item.status
+        data.row[i].status = `<span class="bg-${statusColor} text-white py-2 px-3 rounded-pill fw-bold">${item.status}</span>`
 
-        tableData.value[i].superadminDefault = item.is_superadmin
-        tableData.value[i].is_superadmin = (item.is_superadmin === 1) ? `<span class="bg-success text-white py-2 px-3 rounded-pill fw-bold">Ya</span>` : `<span class="bg-warning py-2 px-3 text-white rounded-pill fw-bold">Bukan</span>`
+        data.row[i].superadminDefault = item.is_superadmin
+        data.row[i].is_superadmin = (item.is_superadmin === 1) ? `<span class="bg-success text-white py-2 px-3 rounded-pill fw-bold">Ya</span>` : `<span class="bg-warning py-2 px-3 text-white rounded-pill fw-bold">Bukan</span>`
     })
 
     // put into table data
