@@ -138,6 +138,7 @@ import type { BackendResponseInterface } from '@/interfaces/BackendResponseInter
 
 // env
 const router = useRouter()
+const emit = defineEmits(['loaded'])
 
 // inject
 const admin = inject<ComputedRef<DataAdminInterface>>('admin')
@@ -166,6 +167,7 @@ const table = ref({
 const tableData: Ref<DatatableAdminInterface[]> = ref([])
 const roles: Ref<DataAdminRoleInterface[]> = ref([])
 const adminDetail: Ref<DatatableAdminInterface> = ref({
+    no: 0,
     id: 0,
     username: '',
     name: '',
@@ -178,6 +180,7 @@ const adminDetail: Ref<DatatableAdminInterface> = ref({
     photo: null,
 })
 const adminUpdate: Ref<DatatableAdminInterface> = ref({
+    no: 0,
     id: 0,
     username: '',
     name: '',
@@ -320,6 +323,7 @@ onMounted(() => {
                     })
                 } else {
                     roles.value = res.data
+                    emit('loaded')
                 }
             }).catch(function(res) {
                 checkAxiosError(res.request.status)
