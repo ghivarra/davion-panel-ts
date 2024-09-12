@@ -86,6 +86,7 @@ const props = defineProps<{
 
 // data
 const data: Ref<DatatableModuleInterface> = ref({
+    no: 0,
     id: 0,
     group: '',
     alias: '',
