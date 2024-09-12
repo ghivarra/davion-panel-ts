@@ -176,7 +176,6 @@ const adminDetail: Ref<DatatableAdminInterface> = ref({
     admin_role_name: '',
     is_superadmin: 0,
     photo: null,
-    statusDefault: '',
 })
 const adminUpdate: Ref<DatatableAdminInterface> = ref({
     id: 0,
@@ -189,7 +188,6 @@ const adminUpdate: Ref<DatatableAdminInterface> = ref({
     admin_role_name: '',
     is_superadmin: 0,
     photo: null,
-    statusDefault: '',
 })
 
 // refs
@@ -243,7 +241,7 @@ const updateStatusRow = (key: number): void => {
     showLoader!()
 
     const data = {... tableData.value[key]}
-    const targetStatus = (data.statusDefault === 'Aktif') ? 'Nonaktif' : 'Aktif'
+    const targetStatus = (data.status === 'Aktif') ? 'Nonaktif' : 'Aktif'
 
     // create form
     const form = new FormData()
