@@ -83,7 +83,7 @@
 <script setup lang="ts">
 
 // import libs
-import { ref, inject } from 'vue'
+import { ref, inject, onMounted } from 'vue'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import axios from 'axios'
 import Swal from 'sweetalert2'
@@ -98,6 +98,9 @@ import type { Ref } from 'vue'
 import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
 import type { VueTableInterface } from '@/libraries/Ghivarra/VueTable/VueTableInterfaces'
 import type { DatatableModuleInterface } from '@/interfaces/Datatable/DatatableModuleInterface'
+
+// define emits
+const emit = defineEmits(['loaded'])
 
 // inject
 const showLoader = inject<() => void>('showLoader')
@@ -122,6 +125,7 @@ const table = ref({
 const moduleGroups: Ref<string[]> = ref([])
 const tableData: Ref<DatatableModuleInterface[]> = ref([])
 const moduleUpdateData: Ref<DatatableModuleInterface> = ref({
+    no: 0,
     id: 0,
     group: '',
     alias: '',
@@ -221,6 +225,11 @@ const deleteRow = (key: number): void => {
 
 // created
 getModuleGroup()
+
+// on mounted
+onMounted(() => {
+    emit('loaded')
+})
 
 </script>
 
