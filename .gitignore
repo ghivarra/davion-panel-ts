@@ -22,6 +22,7 @@ composer.lock
 #-------------------------
 writable/app/*
 public/favicon.ico
+public/.vite/*
 
 #-------------------------
 # Operating Specific Junk Files
