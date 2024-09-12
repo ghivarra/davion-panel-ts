@@ -84,8 +84,8 @@
                                     </button>
                                 </li>
                                 <li>
-                                    <button v-on:click.prevent="updateStatusRow(key)" class="status-button dropdown-item" type="button" title="${btnText} Data">
-                                        <i class="fa-solid fa-sliders me-1 ${btnTextColor}"></i>
+                                    <button v-on:click.prevent="updateStatusRow(key)" v-bind:title="(rowData.status === 'Aktif') ? 'Nonaktifkan Data' : 'Aktifkan Data'" class="status-button dropdown-item" type="button">
+                                        <i v-bind:class="{ 'text-success': (rowData.status === 'Nonaktif'), 'text-warning': (rowData.status === 'Aktif') }" class="fa-solid fa-sliders me-1"></i>
                                         {{ (rowData.status === 'Aktif') ? 'Nonaktifkan' : 'Aktifkan' }}
                                     </button>
                                 </li>
@@ -103,7 +103,7 @@
                     <td v-bind:class="columnData[4].class">{{ rowData.email }}</td>
                     <td v-bind:class="columnData[5].class">{{ rowData.admin_role_name }}</td>
                     <td v-bind:class="columnData[6].class">
-                        <span v-bind:class="{ 'bg-success': (rowData.status === 'Aktif'), 'bg-danger': (rowData.status === 'Nonaktif') }" class="text-white py-2 px-3 rounded-pill fw-bold">{{ rowData.status }}</span>
+                        <span v-bind:class="{ 'bg-success': (rowData.status === 'Aktif'), 'bg-warning': (rowData.status === 'Nonaktif') }" class="text-white py-2 px-3 rounded-pill fw-bold">{{ rowData.status }}</span>
                     </td>
                 </template>
 
