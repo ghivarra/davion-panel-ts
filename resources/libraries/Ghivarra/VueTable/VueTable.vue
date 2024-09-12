@@ -65,8 +65,9 @@
                             <td v-bind:colspan="columns.length">{{ emptyText }}</td>
                         </tr>
                         <tr v-else v-for="(item, n) in response.row" v-bind:key="n">
-                            <td v-for="(column, b) in columns" v-bind:key="b" v-bind:class="column.class"
-                                v-html="item[column.key]"></td>
+                            <slot name="row" v-bind:row-data="item" v-bind:column-data="columns" v-bind:key="n">
+                                <td v-for="(column, b) in columns" v-bind:key="b" v-bind:class="column.class" v-html="item[column.key]"></td>
+                            </slot>
                         </tr>
                     </tbody>
 
@@ -199,7 +200,7 @@ const props = defineProps({
 })
 
 // data
-const response = ref({
+const response: Ref<VueTableInterface> = ref({
     draw: 0,
     length: 0,
     recordsTotal: 0,
