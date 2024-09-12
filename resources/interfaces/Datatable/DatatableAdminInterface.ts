@@ -1,4 +1,5 @@
 export interface DatatableAdminInterface {
+    no: number,
     id: number | string,
     username: string,
     name: string,
