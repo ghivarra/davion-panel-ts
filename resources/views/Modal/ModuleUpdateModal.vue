@@ -41,7 +41,7 @@
                                 Status
                                 <span class="text-danger" title="Wajib Diisi">*</span>
                             </label>
-                            <select v-model="data.statusDefault" name="status" id="moduleStatus" class="form-select"
+                            <select v-model="data.status" name="status" id="moduleStatus" class="form-select"
                                 required>
                                 <option value="Aktif">Aktif</option>
                                 <option value="Nonaktif">Nonaktif</option>
@@ -91,8 +91,6 @@ const data: Ref<DatatableModuleInterface> = ref({
     alias: '',
     name: '',
     status: '',
-    statusDefault: '',
-    groupDefault: ''
 })
 
 // refs
@@ -109,8 +107,6 @@ const clearForm = (): void => {
         data.value.alias = moduleData.alias
         data.value.name = moduleData.name
         data.value.status = moduleData.status
-        data.value.statusDefault = moduleData.statusDefault
-        data.value.groupDefault = moduleData.groupDefault
     })
 }
 

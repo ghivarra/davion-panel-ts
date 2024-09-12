@@ -8,10 +8,12 @@
         <!-- MODULE UPDATE MODAL -->
         <ModuleUpdateModal ref="moduleUpdateModalRef" v-bind:module-groups="moduleGroups" v-bind:get-module-group="getModuleGroup" v-bind:update-table="updateTable" v-bind:module-update-data="moduleUpdateData" />
 
-        <section v-on:click="activeActionButton" ref="moduleTableSection">
+        <section ref="moduleTableSection">
             <vue-table id="module-table" ref="moduleTable" v-bind:defaultLength="25" v-bind:lengthOptions="[10,25,50]"
                 v-bind:url="table.url" v-bind:order="table.order" v-bind:columns="table.columns"
                 v-bind:processData="processData" v-on:afterCreate="$emit('loaded')">
+
+                <!-- SLOT HEADER -->
                 <template v-slot:header>
                     <tr>
                         <th></th>
@@ -34,6 +36,45 @@
                         </th>
                     </tr>
                 </template>
+
+                <!-- SLOT ROW -->
+                <template v-slot:row="{ rowData, columnData, key }">
+                    <td v-bind:class="columnData[0].class">{{ rowData.no }}</td>
+                    <td v-bind:class="columnData[1].class">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle table-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-list me-1"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button v-on:click.prevent="editData(key)" class="edit-button dropdown-item" type="button" title="Edit Data">
+                                        <i class="fa-solid fa-pen-to-square me-1 text-primary"></i>
+                                        Edit
+                                    </button>
+                                </li>
+                                <li>
+                                    <button v-on:click.prevent="updateStatusRow(key)" class="status-button dropdown-item" type="button" title="${btnText} Data">
+                                        <i class="fa-solid fa-sliders me-1 ${btnTextColor}"></i>
+                                        {{ (rowData.status === 'Aktif') ? 'Nonaktifkan' : 'Aktifkan' }}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button v-on:click.prevent="deleteRow(key)" class="delete-button dropdown-item" type="button" title="Hapus Data">
+                                        <i class="fa-solid fa-trash-can me-1 text-danger"></i>
+                                        Hapus
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td v-bind:class="columnData[2].class">{{ rowData.group }}</td>
+                    <td v-bind:class="columnData[3].class">{{ rowData.name }}</td>
+                    <td v-bind:class="columnData[4].class">{{ rowData.alias }}</td>
+                    <td v-bind:class="columnData[5].class">
+                        <span v-bind:class="{ 'bg-success': (rowData.status === 'Aktif'), 'bg-danger': (rowData.status === 'Nonaktif') }" class="text-white py-2 px-3 rounded-pill fw-bold">{{ rowData.status }}</span>
+                    </td>
+                </template>
+
             </vue-table>
         </section>
     </main>
@@ -86,8 +127,6 @@ const moduleUpdateData: Ref<DatatableModuleInterface> = ref({
     alias: '',
     name: '',
     status: '',
-    groupDefault: '',
-    statusDefault: '',
 })
 
 // refs
@@ -107,55 +146,8 @@ const getModuleGroup = (): void => {
 }
 
 const processData = (data: VueTableInterface): VueTableInterface => {
-    if (data.row.length < 1) {
-        tableData.value = []
-        return data
-    }
-
-    data.row.forEach((item, i) => {
-        let btnText = (item.status === 'Aktif') ? 'Nonaktifkan' : 'Aktifkan'
-        let btnTextColor = (item.status === 'Aktif') ? 'text-warning' : 'text-success'
-        data.row[i].action = `<div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle table-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-list me-1"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <button data-key="${i}" class="edit-button dropdown-item" type="button" title="Edit Data">
-                                            <i class="fa-solid fa-pen-to-square me-1 text-primary"></i>
-                                            Edit
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button data-key="${i}" class="status-button dropdown-item" type="button" title="${btnText} Data">
-                                            <i class="fa-solid fa-sliders me-1 ${btnTextColor}"></i>
-                                            ${btnText}
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button data-key="${i}" class="delete-button dropdown-item" type="button" title="Hapus Data">
-                                            <i class="fa-solid fa-trash-can me-1 text-danger"></i>
-                                            Hapus
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>`
-        data.row[i].groupDefault = item.group
-        data.row[i].statusDefault = item.status
-        data.row[i].group = `<p class="m-0 fw-bold">${item.group}</p>`
-        data.row[i].status = (item.status === 'Aktif') ? `<span class="bg-success text-white py-2 px-3 rounded-pill fw-bold">${item.status}</span>` : `<span class="bg-warning py-2 px-3 text-white rounded-pill fw-bold">${item.status}</span>`
-    })
-
-    // put into data
-    tableData.value = [... data.row]
-
-    return {
-        draw: (typeof data.draw === 'string') ? parseInt(data.draw) : data.draw,
-        length: data.length,
-        recordsTotal: data.recordsTotal,
-        recordsFiltered: data.recordsFiltered,
-        row: [... data.row],
-    }
+    tableData.value = (data.row.length < 1) ? [] : [... data.row]
+    return data
 }
 
 const updateTable = (): void => {
@@ -165,20 +157,19 @@ const updateTable = (): void => {
 const editData = (key: number): void => {
     const moduleData = {... tableData.value[key]}
     moduleUpdateData.value.id = (typeof moduleData.id === 'string') ? parseInt(moduleData.id) : moduleData.id
-    moduleUpdateData.value.group = (typeof moduleData.groupDefault === 'undefined') ? '' : moduleData.groupDefault
     moduleUpdateData.value.alias = moduleData.alias
     moduleUpdateData.value.name = moduleData.name
-    moduleUpdateData.value.statusDefault = (typeof moduleData.statusDefault === 'undefined') ? 'Aktif' : moduleData.statusDefault
+    moduleUpdateData.value.status = moduleData.status
     moduleUpdateModalRef.value?.updateModalOpenButton?.click()
 }
 
-const updateStatusData = (key: number): void => {
+const updateStatusRow = (key: number): void => {
     showLoader!()
 
     // set status
     const moduleData = {... tableData.value[key]}
     const targetId = (typeof moduleData.id === 'number') ? moduleData.id.toString() : moduleData.id
-    const targetStatus = (moduleData.statusDefault === 'Aktif') ? 'Nonaktif' : 'Aktif'
+    const targetStatus = (moduleData.status === 'Aktif') ? 'Nonaktif' : 'Aktif'
 
     // create form
     const form = new FormData()
@@ -201,7 +192,7 @@ const updateStatusData = (key: number): void => {
         })
 }
 
-const deleteData = (key: number): void => {
+const deleteRow = (key: number): void => {
     showLoader!()
 
     // set id
@@ -226,31 +217,6 @@ const deleteData = (key: number): void => {
             hideLoader!()
             checkAxiosError(res.request.status)
         })
-}
-
-const activeActionButton = (event: MouseEvent): void => {
-    const target = event.target as HTMLElement
-
-    if (target.closest('.edit-button')) {
-        const key = target.getAttribute('data-key')
-        if (typeof key === 'string') {
-            editData(parseInt(key))
-        }
-    }
-
-    if (target.closest('.status-button')) {
-        const key = target.getAttribute('data-key')
-        if (typeof key === 'string') {
-            updateStatusData(parseInt(key))
-        }
-    }
-
-    if (target.closest('.delete-button')) {
-        const key = target.getAttribute('data-key')
-        if (typeof key === 'string') {
-            deleteData(parseInt(key))
-        }
-    }
 }
 
 // created
