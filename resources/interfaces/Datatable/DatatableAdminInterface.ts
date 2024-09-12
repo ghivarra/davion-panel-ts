@@ -9,7 +9,4 @@ export interface DatatableAdminInterface {
     admin_role_name: string,
     is_superadmin: number | string,
     photo: string | null,
-    statusDefault?: string,
-    superadminDefault?: string | number,
-    action?: string,
 }
