@@ -4,7 +4,4 @@ export interface DatatableModuleInterface {
     name: string,
     group: string,
     status: string,
-    statusDefault?: string,
-    groupDefault?: string,
-    action?: string,
 }
