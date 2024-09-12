@@ -19,10 +19,12 @@
         <AdminDetailModal ref="adminDetailModal" v-bind:admin="adminDetail" />
 
         <!-- TABLE -->
-        <section ref="adminTableSection" v-on:click.prevent="activeActionButton($event as MouseEvent)">
+        <section ref="adminTableSection">
             <VueTable id="admin-table" ref="adminTable" v-bind:defaultLength="25" v-bind:lengthOptions="[10,25,50]"
                 v-bind:url="table.url" v-bind:order="table.order" v-bind:columns="table.columns"
                 v-bind:processData="processData" v-on:afterCreate="$emit('loaded')">
+
+                <!-- SLOT HEADER -->
                 <template v-slot:header>
                     <tr>
                         <th></th>
@@ -53,6 +55,58 @@
                         </th>
                     </tr>
                 </template>
+
+                <!-- SLOT ROW -->
+                <template v-slot:row="{ rowData, columnData, key }">
+                    <td v-bind:class="columnData[0].class">{{ rowData.no }}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle table-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-list me-1"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <button v-on:click.prevent="adminDetailModalOpen(key)" class="detail-button dropdown-item" type="button" title="Cek Sesi Login">
+                                        <i class="fa-solid fa-circle-info me-1 text-primary"></i>
+                                        Detail
+                                    </button>
+                                </li>
+                                <li>
+                                    <button v-on:click.prevent="checkSession(key)" class="check-session-button dropdown-item" type="button" title="Cek Sesi Login">
+                                        <i class="fa-solid fa-clock-rotate-left me-1 text-primary"></i>
+                                        Sesi Login
+                                    </button>
+                                </li>
+                                <li>
+                                    <button v-on:click.prevent="adminUpdateModalOpen(key)" class="edit-button dropdown-item" type="button" title="Edit Data">
+                                        <i class="fa-solid fa-pen-to-square me-1 text-primary"></i>
+                                        Edit
+                                    </button>
+                                </li>
+                                <li>
+                                    <button v-on:click.prevent="updateStatusRow(key)" class="status-button dropdown-item" type="button" title="${btnText} Data">
+                                        <i class="fa-solid fa-sliders me-1 ${btnTextColor}"></i>
+                                        {{ (rowData.status === 'Aktif') ? 'Nonaktifkan' : 'Aktifkan' }}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button v-on:click.prevent="deleteRow(key)" class="delete-button dropdown-item" type="button" title="Hapus Data">
+                                        <i class="fa-solid fa-trash-can me-1 text-danger"></i>
+                                        Hapus
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td v-bind:class="columnData[2].class">{{ rowData.name }}</td>
+                    <td v-bind:class="columnData[3].class">{{ rowData.username }}</td>
+                    <td v-bind:class="columnData[4].class">{{ rowData.email }}</td>
+                    <td v-bind:class="columnData[5].class">{{ rowData.admin_role_name }}</td>
+                    <td v-bind:class="columnData[6].class">
+                        <span v-bind:class="{ 'bg-success': (rowData.status === 'Aktif'), 'bg-danger': (rowData.status === 'Nonaktif') }" class="text-white py-2 px-3 rounded-pill fw-bold">{{ rowData.status }}</span>
+                    </td>
+                </template>
+
             </VueTable>
         </section>
         <!-- TABLE -->
@@ -146,72 +200,8 @@ const adminUpdateModal: Ref<InstanceType<typeof AdminUpdateModal> | null> = ref(
 const adminDetailModal: Ref<InstanceType<typeof AdminDetailModal> | null> = ref(null)
 
 const processData = (data: VueTableInterface): VueTableInterface => {
-    if (data.row.length < 1) {
-        tableData.value = []
-        return data
-    }
-
-    data.row.forEach((item, i) => {
-        const btnText = (item.status === 'Aktif') ? 'Nonaktifkan' : 'Aktifkan'
-        const btnTextColor = (item.status === 'Aktif') ? 'text-warning' : 'text-success'
-        data.row[i].action = `<div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle table-dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-list me-1"></i>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <button data-key="${i}" class="detail-button dropdown-item" type="button" title="Cek Sesi Login">
-                                            <i class="fa-solid fa-circle-info me-1 text-primary"></i>
-                                            Detail
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button data-key="${i}" class="check-session-button dropdown-item" type="button" title="Cek Sesi Login">
-                                            <i class="fa-solid fa-clock-rotate-left me-1 text-primary"></i>
-                                            Sesi Login
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button data-key="${i}" class="edit-button dropdown-item" type="button" title="Edit Data">
-                                            <i class="fa-solid fa-pen-to-square me-1 text-primary"></i>
-                                            Edit
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button data-key="${i}" class="status-button dropdown-item" type="button" title="${btnText} Data">
-                                            <i class="fa-solid fa-sliders me-1 ${btnTextColor}"></i>
-                                            ${btnText}
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button data-key="${i}" class="delete-button dropdown-item" type="button" title="Hapus Data">
-                                            <i class="fa-solid fa-trash-can me-1 text-danger"></i>
-                                            Hapus
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>`
-
-        const statusColor = (item.status === 'Aktif') ? 'success' : 'warning';
-
-        data.row[i].statusDefault = item.status
-        data.row[i].status = `<span class="bg-${statusColor} text-white py-2 px-3 rounded-pill fw-bold">${item.status}</span>`
-
-        data.row[i].superadminDefault = item.is_superadmin
-        data.row[i].is_superadmin = (item.is_superadmin === 1) ? `<span class="bg-success text-white py-2 px-3 rounded-pill fw-bold">Ya</span>` : `<span class="bg-warning py-2 px-3 text-white rounded-pill fw-bold">Bukan</span>`
-    })
-
-    // put into table data
-    tableData.value = [... data.row]
-
-    // return
-    return {
-        draw: (typeof data.draw === 'string') ? parseInt(data.draw) : data.draw,
-        length: data.length,
-        recordsTotal: data.recordsTotal,
-        recordsFiltered: data.recordsFiltered,
-        row: [... data.row],
-    }
+    tableData.value = (data.row.length < 1) ? [] : [... data.row]
+    return data
 }
 
 const refreshTable = (): void => {
@@ -317,45 +307,6 @@ const deleteRow = (key: number):void => {
 
 const checkSession = (key: number): void => {
     router.push({ path: `administrator/session/${tableData.value[key].id}` })
-}
-
-const activeActionButton = (event: MouseEvent): void => {
-    const target = event.target as HTMLElement
-
-    if (target.closest('.detail-button')) {
-        const key = target.getAttribute('data-key')
-        if (typeof key === 'string') {
-            adminDetailModalOpen(parseInt(key))
-        }
-    }
-
-    if (target.closest('.edit-button')) {
-        const key = target.getAttribute('data-key')
-        if (typeof key === 'string') {
-            adminUpdateModalOpen(parseInt(key))
-        }
-    }
-
-    if (target.closest('.status-button')) {
-        const key = target.getAttribute('data-key')
-        if (typeof key === 'string') {
-            updateStatusRow(parseInt(key))
-        }
-    }
-
-    if (target.closest('.delete-button')) {
-        const key = target.getAttribute('data-key')
-        if (typeof key === 'string') {
-            deleteRow(parseInt(key))
-        }
-    }
-
-    if (target.closest('.check-session-button')) {
-        const key = target.getAttribute('data-key')
-        if (typeof key === 'string') {
-            checkSession(parseInt(key))
-        }
-    }
 }
 
 // on mounted
