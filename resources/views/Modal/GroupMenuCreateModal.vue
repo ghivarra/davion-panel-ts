@@ -49,7 +49,10 @@ import { ref, inject } from 'vue'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface';
+
+// import types
+import type { Ref } from 'vue'
+import type { BackendResponseInterface } from '@/interfaces/BackendResponseInterface'
 
 // inject
 const showLoader = inject<() => void>('showLoader')
@@ -59,6 +62,10 @@ const hideLoader = inject<() => void>('hideLoader')
 const name = ref('')
 const status = ref('Aktif')
 
+// refs
+const modalOpenButton: Ref<HTMLElement | null> = ref(null)
+const modalCloseButton: Ref<HTMLElement | null> = ref(null)
+
 // methods
 const clearForm = (): void => {
     name.value = ''
@@ -67,6 +74,7 @@ const clearForm = (): void => {
 
 const submitForm = (): void => {
     showLoader!()
+    modalCloseButton.value?.click()
 
     const form = new FormData()
     form.append('name', name.value)
@@ -87,5 +95,10 @@ const submitForm = (): void => {
             checkAxiosError(res.request.status)
         })
 }
+
+// expose
+defineExpose({
+    modalOpenButton, modalCloseButton
+})
 
 </script>
