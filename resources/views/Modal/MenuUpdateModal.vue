@@ -181,4 +181,9 @@ const submitForm = (): void => {
         })
 }
 
+// expose
+defineExpose({
+    modalCloseButton, modalOpenButton
+})
+
 </script>
