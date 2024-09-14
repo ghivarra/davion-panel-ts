@@ -24,7 +24,7 @@
     "sweetalert2": "^11.12.4",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
-    "vuedraggable": "^2.24.3"
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^6.0.0",
