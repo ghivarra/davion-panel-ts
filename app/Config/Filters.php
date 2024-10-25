@@ -78,6 +78,7 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
+            // 'sessionGC',
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
@@ -101,7 +102,9 @@ class Filters extends BaseFilters
      *
      * @var array<string, list<string>>
      */
-    public array $methods = [];
+    public array $methods = [
+        'GET' => ['sessionGC']
+    ];
 
     /**
      * List of filter aliases that should run on any
