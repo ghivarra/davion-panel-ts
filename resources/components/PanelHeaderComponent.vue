@@ -106,7 +106,7 @@
 import { ref, inject, computed, nextTick, onMounted } from 'vue'
 import { imageUrl, panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import { Dropdown } from 'bootstrap'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 import axios from 'axios'
 
 // import types
@@ -127,7 +127,6 @@ interface PublicMenuSearchInterface {
 // inject
 const admin = inject<ComputedRef<DataAdminInterface>>('admin')
 const showLoader = inject<() => void>('showLoader')
-const hideLoader = inject<() => void>('hideLoader')
 
 // data
 const pageSearch = ref(false)
@@ -156,33 +155,48 @@ const showPageSearch = async (): Promise<void> => {
 }
 
 const logout = (): void => {
-    Swal.fire({
-        title: 'Peringatan',
-        text: 'Apakah anda yakin akan keluar?',
-        icon: 'warning',
-        showDenyButton: true,
-        showCancelButton: true,
-        showConfirmButton: false,
-        denyButtonText: 'Ya, Lanjut Keluar',
-        cancelButtonText: 'Batal'
-    }).then((result) => {
-        if (result.isDenied) {
-            Swal.close()
+    swal({
+        className: 'confirmation-alert',
+        title: 'Keluar Dari Panel?',
+        text: 'Anda harus melakukan login ulang untuk mengakses halaman ini lagi setelah melakukan logout',
+        buttons: {
+            cancel: {
+                className: 'btn btn-sm btn-outline-secondary',
+                text: 'Batal',
+                visible: true,
+                value: false,
+            },
+            confirm: {
+                className: 'btn btn-sm btn-primary',
+                text: 'Logout',
+                visible: true,
+                value: true,
+            },
+        }
+    }).then((isConfirmed) => {
+        if (isConfirmed) {
             showLoader!()
             axios.get(panelUrl('public/logout'))
                 .then(function(response) {
                     let res: BackendResponseInterface = response.data
                     if(typeof res.status === 'undefined' || res.status !== 'success') {
-                        Swal.fire('Whoopss!!', 'Koneksi jaringan atau server sedang bermasalah, silahkan coba lagi', 'warning')
+                        swal({
+                            title: 'Whoopss!!',
+                            icon: 'warning',
+                            text: 'Koneksi jaringan atau server sedang bermasalah, silahkan coba lagi',
+                            buttons: {
+                                confirm: {
+                                    className: 'btn btn-primary',
+                                    text: 'OK'
+                                }
+                            }
+                        })
                     } else {
-                        hideLoader!()
                         window.location.reload()
                     }
                 }).catch(function(res) {
                     checkAxiosError(res.request.status)
                 })
-        } else {
-            Swal.close()
         }
     })
 }
