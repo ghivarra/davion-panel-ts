@@ -58,7 +58,7 @@ import { dom } from '@fortawesome/fontawesome-svg-core'
 import { computed, ref, nextTick, provide, onMounted, watch } from 'vue'
 import { panelUrl, checkAxiosError, generateBreadcrumb, baseUrl, imageUrl } from '@/libraries/Helpers'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 import { useRouter, useRoute } from 'vue-router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faBars, faPenToSquare, faSliders, faTrashCan, faPlus, faMagnifyingGlass, faXmark, faGear, faKey, faRightFromBracket, faTableCellsLarge, faUser, faUserTie, faTableColumns, faGlobe, faChevronRight, faSave, faEllipsisVertical, faEye, faEyeSlash, faEnvelope, faClockRotateLeft, faCircleInfo, faList, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
@@ -168,7 +168,17 @@ const updateAdminData = (): void => {
             .then(function(response) {
                 const res: BackendResponseInterface = response.data
                 if (res.status !== 'success') {
-                    Swal.fire('Whoopss!!', res.message, 'warning').then(function() {
+                    swal({
+                        title: 'Whoopss!!',
+                        icon: 'warning',
+                        text: res.message,
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-primary',
+                                text: 'OK'
+                            }
+                        }
+                    }).then(() => {
                         window.location.reload()
                     })
                 } else {
@@ -197,7 +207,17 @@ const loggingOut = (): void => {
             .then(function(res) {
                 let data: BackendResponseInterface = res.data
                 if(typeof data.status === 'undefined' || data.status !== 'success') {
-                    Swal.fire('Whoopss!!', 'Koneksi jaringan atau server sedang bermasalah, silahkan coba lagi', 'warning')
+                    swal({
+                        title: 'Whoopss!!',
+                        icon: 'warning',
+                        text: 'Koneksi jaringan atau server sedang bermasalah, silahkan coba lagi',
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-primary',
+                                text: 'OK'
+                            }
+                        }
+                    })
                 } else {
                     window.location.reload()
                 }
@@ -237,7 +257,17 @@ axios.get(panelUrl('public/menu'))
         .then(function(response) {
             const res: BackendResponseInterface = response.data
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning').then(function() {
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                }).then(() => {
                     window.location.reload()
                 })
             } else {
