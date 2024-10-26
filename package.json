@@ -21,6 +21,7 @@
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
+    "sweetalert": "^2.1.2",
     "sweetalert2": "^11.12.4",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",

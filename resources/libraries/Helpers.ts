@@ -1,32 +1,46 @@
-import Swal from "sweetalert2"
+import swal from "sweetalert"
 import type { Router } from "vue-router"
 
 /**
  * @param {number} status
  */
-const checkAxiosError = (status: number): void => {
+const checkAxiosError = (status: number, options?: { title?: string, icon?: string, text?: string }): void => {
 
     let switchNotDetected = false
 
     switch (status) {
         case 400:
-            Swal.fire('Whoopss!!', 'Ada kesalahan dalam pengisian form', 'error')
+            swal({
+                title: (typeof options?.title !== 'undefined') ? options.title : 'Whoopss!!',
+                icon: (typeof options?.icon !== 'undefined') ? options.icon : 'warning',
+                text: (typeof options?.text !== 'undefined') ? options.text : 'Ada kesalahan dalam pengisian form',
+            })
             break;
 
         case 401:
-            Swal.fire('Whoopss!!', 'Sesi login anda sudah kedaluwarsa, silahkan login kembali', 'warning').then(() => {
+            swal({
+                title: (typeof options?.title !== 'undefined') ? options.title : 'Whoopss!!',
+                icon: (typeof options?.icon !== 'undefined') ? options.icon : 'warning',
+                text: (typeof options?.text !== 'undefined') ? options.text : 'Sesi login anda sudah kedaluwarsa, silahkan login kembali',
+            }).then(() => {
                 window.location.reload()
             })
             break;
         
         case 403:
-            Swal.fire('Whoopss!!', 'Anda tidak memiliki izin untuk mengakses halaman ini', 'error').then(() => {
-                window.history.back()
+            swal({
+                title: (typeof options?.title !== 'undefined') ? options.title : 'Whoopss!!',
+                icon: (typeof options?.icon !== 'undefined') ? options.icon : 'error',
+                text: (typeof options?.text !== 'undefined') ? options.text : 'Anda tidak memiliki izin untuk mengakses halaman ini',
             })
             break;
 
         case 404:
-            Swal.fire('Whoopss!!', 'Halaman Tidak Ditemukan', 'error')
+            swal({
+                title: (typeof options?.title !== 'undefined') ? options.title : 'Whoopss!!',
+                icon: (typeof options?.icon !== 'undefined') ? options.icon : 'error',
+                text: (typeof options?.text !== 'undefined') ? options.text : 'Halaman tidak ditemukan',
+            })
             break;
             
         default:
@@ -35,7 +49,11 @@ const checkAxiosError = (status: number): void => {
     }
 
     if (switchNotDetected && status >= 500) {
-        Swal.fire('Whoopss!!', 'Server sedang sibuk, silahkan coba lagi dalam beberapa saat', 'warning')
+        swal({
+            title: (typeof options?.title !== 'undefined') ? options.title : 'Whoopss!!',
+            icon: (typeof options?.icon !== 'undefined') ? options.icon : 'warning',
+            text: (typeof options?.text !== 'undefined') ? options.text : 'Server sedang sibuk, silahkan coba lagi dalam beberapa saat',
+        })
     }
 }
 

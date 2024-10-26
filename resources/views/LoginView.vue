@@ -2,7 +2,7 @@
     <main id="loginMain" class="position-relative">
         <section id="loginFormSection" class="login-form-section w-100 d-flex align-items-center">
             <form v-on:submit.prevent="login" id="loginForm" method="post" class="w-100">
-                <input type="hidden" v-bind:name="token" v-bind:value="hash">
+                <input ref="csrfInputRef" type="hidden" v-bind:name="csrfToken" v-bind:value="csrfHash">
                 <div class="h4 text-center fw-bold mb-4">Selamat Datang</div>
                 <div class="d-flex justify-content-center mb-5">
                     <img v-bind:src="logo" v-bind:alt="config.name">
@@ -39,7 +39,7 @@ import { imageUrl, loginUrl, checkAxiosError } from "@/libraries/Helpers"
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 
 // types
 import type { ComputedRef } from 'vue'
@@ -94,23 +94,30 @@ const login = (event: Event): void => {
                 hideLoader!()
                 csrfToken.value = res.data.csrfToken
                 csrfHash.value = res.data.csrfHash
-                Swal.fire('Otentikasi Gagal', res.message, 'warning')
-            } else {
-                Swal.fire({
-                    title: 'Otentikasi Berhasil',
-                    text: 'Anda akan dialihkan ke panel dasbor dalam beberapa detik',
-                    icon: 'success',
-                    timer: 2500,
-                    timerProgressBar: true,
-                    allowOutsideClick: false,
-                    showCloseButton: false,
-                    showConfirmButton: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                    },
-                    didClose: () => {
-                        window.location.reload()
+                swal({
+                    title: 'Otentikasi Gagal',
+                    icon: 'warning',
+                    text: res.message,
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
                     }
+                })
+            } else {
+                swal({
+                    title: 'Otentikasi Berhasil',
+                    icon: 'success',
+                    text: 'Anda akan dialihkan ke panel dalam dasbor dalam beberapa detik',
+                    closeOnEsc: false,
+                    closeOnClickOutside: false,
+                    timer: 2500,
+                    buttons: {}
+                }).then(() => {
+                    window.location.reload()
                 })
             }
         }).catch(function(res) {
@@ -178,6 +185,30 @@ const login = (event: Event): void => {
             outline: none;
             border-bottom-color: var(--bs-primary);
         }
+    }
+}
+
+.swal-overlay {
+    .swal-button {
+        font-size: 1.15rem;
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+
+        &.btn-primary:not([disabled]):hover {
+            background-color: var(--bs-btn-hover-bg);
+        }
+    }
+    
+    .swal-footer {
+        text-align: center;
+    }
+
+    .swal-title {
+        margin-bottom: 1.2rem;
+    }
+
+    .swal-text {
+        text-align: center;
     }
 }
 

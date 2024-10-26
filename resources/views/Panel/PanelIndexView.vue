@@ -348,4 +348,28 @@ table .table-dropdown::after {
     }
 }
 
+.swal-overlay {
+    .swal-button {
+        font-size: 1.15rem;
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+
+        &.btn-primary:not([disabled]):hover {
+            background-color: var(--bs-btn-hover-bg);
+        }
+    }
+    
+    .swal-footer {
+        text-align: center;
+    }
+
+    .swal-title {
+        margin-bottom: 1.2rem;
+    }
+
+    .swal-text {
+        text-align: center;
+    }
+}
+
 </style>
