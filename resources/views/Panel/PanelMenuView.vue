@@ -93,7 +93,7 @@
 import { ref, inject } from 'vue'
 import { checkAxiosError, panelUrl } from '@/libraries/Helpers'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 
 // import components
 import draggable from 'vuedraggable'
@@ -202,7 +202,17 @@ const saveList = (): void => {
             const res: BackendResponseInterface = response.data
             hideLoader!()
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 window.location.reload()
             }
@@ -256,7 +266,17 @@ const updateGroupStatus = (index: number): void => {
             const res: BackendResponseInterface = response.data
             if (res.status !== 'success') {
                 hideLoader!()
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 window.location.reload()
             }
@@ -280,7 +300,17 @@ const deleteGroup = (index: number): void => {
             const res: BackendResponseInterface = response.data
             if (res.status !== 'success') {
                 hideLoader!()
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 window.location.reload()
             }

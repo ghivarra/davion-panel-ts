@@ -38,7 +38,7 @@
 import { ref, inject, watch, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 import axios from 'axios'
 
 // import types
@@ -108,7 +108,17 @@ const submitForm = (event: Event): void => {
             const res: BackendResponseInterface = response.data
             hideLoader!()
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 updateAdminData!()
                 router.push({ name: 'panel.profile' })

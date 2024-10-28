@@ -86,7 +86,7 @@
 import { ref, inject, onMounted } from 'vue'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 
 // import components
 import VueTable from '@/libraries/Ghivarra/VueTable/VueTable.vue'
@@ -186,7 +186,17 @@ const updateStatusRow = (key: number): void => {
             const res: BackendResponseInterface = response.data
             hideLoader!()
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 updateTable()
             }
@@ -213,7 +223,17 @@ const deleteRow = (key: number): void => {
             const res: BackendResponseInterface = response.data
             hideLoader!()
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 updateTable()
             }

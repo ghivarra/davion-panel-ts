@@ -120,7 +120,6 @@ import { inject, ref, onMounted } from 'vue'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import Swal from 'sweetalert2'
 
 // import components
 import VueTable from '@/libraries/Ghivarra/VueTable/VueTable.vue'
@@ -258,7 +257,17 @@ const updateStatusRow = (key: number): void => {
             const res: BackendResponseInterface = response.data
             hideLoader!()
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 const dataId = (typeof data.id === 'string') ? parseInt(data.id) : data.id
                 const adminId = (typeof admin?.value.id === 'string') ? parseInt(admin.value.id) : admin?.value.id
@@ -290,7 +299,17 @@ const deleteRow = (key: number):void => {
             const res: BackendResponseInterface = response.data
             hideLoader!()
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 const dataId = (typeof data.id === 'string') ? parseInt(data.id) : data.id
                 const adminId = (typeof admin?.value.id === 'string') ? parseInt(admin.value.id) : admin?.value.id
@@ -318,7 +337,17 @@ onMounted(() => {
             .then(function(response) {
                 const res: BackendResponseInterface = response.data
                 if (res.status !== 'success') {
-                    Swal.fire('Whoopss!!', res.message, 'warning').then(function() {
+                    swal({
+                        title: 'Whoopss!!',
+                        icon: 'warning',
+                        text: res.message,
+                        buttons: {
+                            confirm: {
+                                className: 'btn btn-primary',
+                                text: 'OK'
+                            }
+                        }
+                    }).then(() => {
                         window.location.reload()
                     })
                 } else {

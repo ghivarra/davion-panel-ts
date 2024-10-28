@@ -69,7 +69,7 @@
 import { ref, inject, computed, onMounted } from 'vue'
 import { panelUrl, checkAxiosError, imageUrl } from '@/libraries/Helpers'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 
 // import types
 import type { DataAdminInterface } from '@/interfaces/DataAdminInterface'
@@ -97,14 +97,27 @@ const profilePicture = computed(() => {
 
 // methods
 const deleteSession = (session: DataAdminSessionInterface) => {
-    Swal.fire({
-        html: `Apakah anda yakin akan menghapus sesi login di <b>${session.useragent.platform}</b>?`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya, Hapus',
-        cancelButtonText: 'Batalkan',
-    }).then((result) => {
-        if (result.isConfirmed) {
+
+    swal({
+        className: 'confirmation-alert',
+        title: 'Hapus Sesi?',
+        text: 'Apabila sesi ini aktif, maka pengguna harus melakukan login ulang',
+        buttons: {
+            cancel: {
+                className: 'btn btn-sm btn-outline-secondary',
+                text: 'Batal',
+                visible: true,
+                value: false,
+            },
+            confirm: {
+                className: 'btn btn-sm btn-danger',
+                text: 'Hapus',
+                visible: true,
+                value: true,
+            },
+        }
+    }).then((isConfirmed) => {
+        if (isConfirmed) {
             showLoader!()
             const form = new FormData()
             form.append('id', session.id.toString())
@@ -114,7 +127,17 @@ const deleteSession = (session: DataAdminSessionInterface) => {
                 .then(function(response) {
                     const res: BackendResponseInterface = response.data
                     if (res.status !== 'success') {
-                        Swal.fire('Whoopss!!', res.message, 'warning')
+                        swal({
+                            title: 'Whoopss!!',
+                            icon: 'warning',
+                            text: res.message,
+                            buttons: {
+                                confirm: {
+                                    className: 'btn btn-primary',
+                                    text: 'OK'
+                                }
+                            }
+                        })
                         hideLoader!()
                     } else {
                         updateAdminData!()

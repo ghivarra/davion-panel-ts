@@ -48,7 +48,7 @@
 import { ref, inject, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 import axios from 'axios'
 
 // import type
@@ -82,7 +82,17 @@ const submitForm = (event: SubmitEvent): void => {
 
     // check data
     if (data.value.newPassword !== data.value.confPassword) {
-        Swal.fire('Perubahan Dibatalkan', 'Form Password Baru dan form Konfirmasi Password Baru tidak sesuai', 'error')
+        swal({
+            title: 'Perubahan Dibatalkan',
+            icon: 'error',
+            text: 'Form Password Baru dan form Konfirmasi Password Baru tidak sesuai',
+            buttons: {
+                confirm: {
+                    className: 'btn btn-primary',
+                    text: 'OK'
+                }
+            }
+        })
         return
     }
 
@@ -94,13 +104,32 @@ const submitForm = (event: SubmitEvent): void => {
             const res: BackendResponseInterface = response.data
             hideLoader!()
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
-                Swal.fire('Perubahan Berhasil Disimpan', res.message, 'success')
-                    .then(function() {
-                        showLoader!()
-                        router.push({ name: 'panel.profile' })
-                    })
+                swal({
+                    title: 'Perubahan Berhasil Disimpan',
+                    icon: 'success',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                }).then(function() {
+                    showLoader!()
+                    router.push({ name: 'panel.profile' })
+                })
             }
         })
         .catch(function(res) {

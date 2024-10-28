@@ -83,7 +83,7 @@
 // import libs
 import { inject, ref, computed, onMounted } from 'vue'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 import { panelUrl, checkAxiosError, imageUrl } from '@/libraries/Helpers'
 
 // import type
@@ -129,7 +129,17 @@ const submitMainForm = (event: SubmitEvent): void => {
             const res: BackendResponseInterface = response.data
             if (res.status !== 'success') {
                 hideLoader!()
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 window.location.reload()
             }
@@ -147,7 +157,17 @@ const submitLogoForm = (event: SubmitEvent): void => {
             const res: BackendResponseInterface = response.data
             if (res.status !== 'success') {
                 hideLoader!()
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 window.location.reload()
             }
@@ -165,7 +185,17 @@ const submitIconForm = (event: SubmitEvent): void => {
             const res: BackendResponseInterface = response.data
             if (res.status !== 'success') {
                 hideLoader!()
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 window.location.reload()
             }
