@@ -114,9 +114,6 @@ const profilePicture = computed(() => {
 
 // methods
 const deleteSession = (session: DataAdminSessionInterface) => {
-    let contentHtml = document.createElement('p')
-    contentHtml.innerHTML = `Apakah anda yakin akan menghapus sesi login di <b>${session.useragent.platform}</b> dari akun <b>${admin.value.name}</b>?`
-
     swal({
         className: 'confirmation-alert',
         title: 'Hapus Sesi?',
