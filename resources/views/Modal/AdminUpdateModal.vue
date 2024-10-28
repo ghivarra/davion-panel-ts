@@ -100,7 +100,7 @@
 import { ref, inject, nextTick } from 'vue'
 import { panelUrl, checkAxiosError, restructurized } from '@/libraries/Helpers'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 
 // import types
 import type { DatatableAdminInterface } from '@/interfaces/Datatable/DatatableAdminInterface'
@@ -200,7 +200,17 @@ const submitForm = (event: SubmitEvent): void => {
         .then(function(response) {
             const res: BackendResponseInterface = response.data
             if (res.status !== 'success') {
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 emit('formSubmitted')
             }

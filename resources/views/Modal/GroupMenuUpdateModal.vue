@@ -47,7 +47,7 @@
 import { ref, inject } from 'vue'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import axios from 'axios'
-import Swal from 'sweetalert2'
+import swal from 'sweetalert'
 
 // import types
 import type { Ref } from 'vue'
@@ -94,7 +94,17 @@ const submitForm = (): void => {
             const res: BackendResponseInterface = response.data
             if (res.status !== 'success') {
                 hideLoader!()
-                Swal.fire('Whoopss!!', res.message, 'warning')
+                swal({
+                    title: 'Whoopss!!',
+                    icon: 'warning',
+                    text: res.message,
+                    buttons: {
+                        confirm: {
+                            className: 'btn btn-primary',
+                            text: 'OK'
+                        }
+                    }
+                })
             } else {
                 window.location.reload()
             }
