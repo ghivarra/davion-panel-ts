@@ -12,9 +12,14 @@ class LoginController extends BaseController
 {
     public function authenticate(): ResponseInterface
     {
-        $davionShield = new DavionShield();
+        $davionShield  = new DavionShield();
+        $isAuthSuccess = $davionShield->attempt();
 
-        if (!$davionShield->attempt())
+        // session not needed anymore, unlock the session file mechanism
+        session_write_close();
+
+        // check for return
+        if (!$isAuthSuccess)
         {
             return $this->response->setJSON([
                 'status'  => 'error',

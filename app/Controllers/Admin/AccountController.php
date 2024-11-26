@@ -126,6 +126,9 @@ class AccountController extends BaseController
         $auth     = new DavionShield();
         $sessions = $auth->getSession();
 
+        // session not needed anymore, unlock the session file mechanism
+        session_write_close();
+
         // parse
         foreach ($sessions as $n => $session):
 
