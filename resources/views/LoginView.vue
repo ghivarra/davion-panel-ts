@@ -2,7 +2,7 @@
     <main id="loginMain" class="position-relative">
         <section id="loginFormSection" class="login-form-section w-100 d-flex align-items-center">
             <form v-on:submit.prevent="login" id="loginForm" method="post" class="w-100">
-                <input ref="csrfInputRef" type="hidden" v-bind:name="csrfToken" v-bind:value="csrfHash">
+                <input ref="csrfInputRef" type="hidden" v-bind:name="csrfToken" v-model="csrfHash">
                 <div class="h4 text-center fw-bold mb-4">Selamat Datang</div>
                 <div class="d-flex justify-content-center mb-5">
                     <img v-bind:src="logo" v-bind:alt="config.name">
