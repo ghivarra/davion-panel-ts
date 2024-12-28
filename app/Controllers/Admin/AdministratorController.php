@@ -4,6 +4,7 @@ use App\Models\AdminModel;
 use App\Models\AdminRoleModel;
 use App\Controllers\BaseController;
 use App\Libraries\Ghivarra\DavionShield;
+use App\Libraries\Ghivarra\Datatable;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\HTTP\ResponseInterface;
 use Config\Services;
@@ -16,45 +17,6 @@ class AdministratorController extends BaseController
             'status'  => 'error',
             'message' => 'Setelan akun admin utama tidak bisa dirubah. Buat admin baru untuk mencoba fitur-fitur pada Davion Panel',
         ]);
-    }
-
-    //================================================================================================
-
-    private function buildSearchQuery($orm, $columns)
-    {
-        foreach ($columns as $column):
-
-            if ($column['key'] === 'status' OR $column['key'] === 'name')
-            {
-                $column['key'] = "admin.{$column['key']}";
-
-            } elseif ($column['key'] === 'admin_role_name') {
-
-                $column['key'] = 'admin_role_id';
-            }
-
-            if (strlen($column['query']) > 0)
-            {
-                if ($column['key'] === 'admin.status' OR $column['key'] === 'admin_role_id')
-                {
-                    $orm->where($column['key'], $column['query']);
-
-                } else {
-
-                    if (str_contains($column['key'], '.'))
-                    {
-                        $orm->like($column['key'], $column['query'], 'both', null, true);
-    
-                    } else {
-                        
-                        $orm->like("admin.{$column['key']}", $column['query'], 'both', null, true);
-                    }
-                }
-            }
-
-        endforeach;
-
-        return $orm;
     }
 
     //================================================================================================
@@ -156,70 +118,65 @@ class AdministratorController extends BaseController
         // session not needed anymore, unlock the session file mechanism
         session_write_close();
 
-        // create model instance
-        $orm = new AdminModel();
-
-        // get input
-        $draw    = $this->request->getPost('draw');
-        $all     = $this->request->getPost('all');
-        $limit   = intval($this->request->getPost('limit'));
-        $offset  = intval($this->request->getPost('offset'));
-        $order   = $this->request->getPost('order');
-        $columns = $this->request->getPost('columns');
-        $select  = ['admin.id', 'admin.name', 'username', 'is_superadmin', 'admin.status', 'email', 'email_verified_at', 'admin_role_id', 'admin_role.name as admin_role_name', 'photo'];
-
         // set order column and dir
+        $order           = $this->request->getPost('order');
         $defaultOrderCol = 'name';
         $defaultOrderDir = 'ASC';
         $orderColumn     = isset($order['column']) ? $order['column'] : 'name';
         $orderDir        = isset($order['dir']) ? strtoupper($order['dir']) : 'ASC';
 
-        // get total
-        $total = $orm->countAllResults();
+        // datatable
+        $datatable = new Datatable();
 
-        // no query
-        $orm = $orm->select($select)
-                   ->join('admin_role', 'admin_role_id = admin_role.id', 'left')
-                   ->orderBy($orderColumn, $orderDir)
-                   ->orderBy($defaultOrderCol, $defaultOrderDir);
-        
-        if ($all !== 'true')
-        {
-            $orm = $orm->limit($limit, $offset);
-        }
-
-        // get filtered total
-        $orm           = $this->buildSearchQuery($orm, $columns);
-        $filteredTotal = $orm->countAllResults(false);
-        
-        if ($all !== 'true')
-        {
-            $orm = $orm->limit($limit, $offset);
-        }
-
-        // get data
-        $orm  = $this->buildSearchQuery($orm, $columns);
-        $data = $orm->find();
+        // get datatable data
+        $data = $datatable->fetch([
+            'tableName'       => 'admin',
+            'orm'             => new AdminModel(),
+            'selectedColumns' => [
+                'admin.id', 'admin.name', 'username', 'is_superadmin', 'admin.status', 'email', 'email_verified_at', 'admin_role_id', 'admin_role.name as admin_role_name', 'photo'
+            ],
+            'getAllData'  => ($this->request->getPost('all') === 'true') ? true : false,
+            'limit'       => intval($this->request->getPost('limit')),
+            'offset'      => intval($this->request->getPost('offset')),
+            'drawCount'   => intval($this->request->getPost('draw')),
+            'columnQuery' => $this->request->getPost('columns'),
+            'orders'      => [
+                ['column' => $orderColumn, 'order' => $orderDir],
+                ['column' => $defaultOrderCol, 'order' => $defaultOrderDir],
+            ],
+            
+            // parameters
+            'joinParams' => [
+                ['table' => 'admin_role', 'options' => 'admin_role_id = admin_role.id']
+            ],
+            'defaultParams' => [
+                // not used
+            ],
+            'searchParams' => [
+                'status' => [
+                    'type'      => 'is',
+                    'targetKey' => 'admin.status',
+                ],
+                'name' => [
+                    'type'      => 'isLike',
+                    'targetKey' => 'admin.name',
+                ],
+                'admin_role_name' => [
+                    'type'      => 'is',
+                    'targetKey' => 'admin_role_id',
+                ]
+            ]
+        ]);
 
         // parse data
-        foreach ($data as $key => $item):
+        foreach ($data['data']['row'] as $key => $item):
 
-            $data[$key]['email_verified_at'] = is_null($item['email_verified_at']) ? 'Belum Terverifikasi' : 'Terverifikasi';
+            $data['data']['row'][$key]['email_verified_at'] = is_null($item['email_verified_at']) ? 'Belum Terverifikasi' : 'Terverifikasi';
 
         endforeach;
 
         // return
-        return $this->response->setJSON([
-            'status'  => 'success',
-            'message' => 'Data berhasil ditarik',
-            'data'    => [
-                'draw'            => $draw,
-                'length'          => count($data),
-                'recordsTotal'    => $total,
-                'recordsFiltered' => $filteredTotal,
-                'row'             => numbering($data, $offset)
-            ]
-        ]);
+        return $this->response->setJSON($data);
     }
 
     //================================================================================================
