@@ -35,6 +35,7 @@ export default defineConfig({
     origin: env.VITE_ORIGIN,
     port: parseInt(env.VITE_PORT),
     strictPort: true,
+    cors: true,
     hmr: {
       host: env.VITE_HOST,
       port: parseInt(env.VITE_PORT),
