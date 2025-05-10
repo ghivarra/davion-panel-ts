@@ -1,15 +1,15 @@
 #-------------------------
 # Config Files
 #-------------------------
-app/Config/App.php
-app/Config/Cookie.php
-app/Config/Database.php
-app/Config/Email.php
-app/Config/Session.php
-app/Config/Security.php
-app/Config/Encryption.php
-app/Config/Cache.php
-app/Config/ContentSecurityPolicy.php
+# app/Config/App.php
+# app/Config/Cookie.php
+# app/Config/Database.php
+# app/Config/Email.php
+# app/Config/Session.php
+# app/Config/Security.php
+# app/Config/Encryption.php
+# app/Config/Cache.php
+# app/Config/ContentSecurityPolicy.php
 
 #-------------------------
 # Package Lock
@@ -20,7 +20,21 @@ composer.lock
 #-------------------------
 # Storage Files
 #-------------------------
-writable/app/*
+writable/app/images/*
+!writable/app/images/computer.png
+!writable/app/images/login-background.jpg
+!writable/app/images/no-image.png
+!writable/app/images/tablet-smartphone.png
+!writable/app/images/logo
+writable/app/images/logo/*
+!writable/app/images/logo/logo.png
+!writable/app/images/icon
+writable/app/images/icon/*
+!writable/app/images/icon/icon.png
+!writable/app/images/admin
+writable/app/images/admin/*
+!writable/app/images/admin/default-user.png
+
 public/favicon.ico
 public/.vite/*
 
