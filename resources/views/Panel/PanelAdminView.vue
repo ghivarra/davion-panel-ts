@@ -120,6 +120,7 @@ import { inject, ref, onMounted } from 'vue'
 import { panelUrl, checkAxiosError } from '@/libraries/Helpers'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import swal from 'sweetalert'
 
 // import components
 import VueTable from '@/libraries/Ghivarra/VueTable/VueTable.vue'
