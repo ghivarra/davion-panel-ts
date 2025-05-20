@@ -51,13 +51,13 @@ abstract class BaseController extends Controller
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        // register vue
-        $this->vue = new VueIgniter();
-
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
+
+        // register vue
+        $this->vue = new VueIgniter();
 
         // E.g.: $this->session = service('session');
     }
