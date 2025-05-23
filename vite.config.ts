@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import basicSsl from '@vitejs/plugin-basic-ssl'
+import { md5 } from "js-md5"
 
 /* global process */
 
@@ -46,7 +47,8 @@ export default defineConfig({
 						for (let i = 0; i < chunkedFiles.length; i++) {
 							const chunked = chunkedFiles[i];
 							if (id.includes(chunked)) {
-								return 'chunk-' + chunked
+								// hash the chunked/splitted file names
+								return 'chunk-' + md5(chunked)
 							}
 						}
 
